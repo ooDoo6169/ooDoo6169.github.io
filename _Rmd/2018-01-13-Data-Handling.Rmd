@@ -1,0 +1,197 @@
+---
+title: "Data-Handling"
+author: "ooDoo"
+date: 2018-01-08
+image: /assets/article_images/title/siba.jpg
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1. apply
+: `apply` 함수는 데이터의 행 또는 열에 동일한 연산을 가하기 위해 사용한다. 여기서 확인하고자 하는 `apply`, `sappy`, `lapply ` 3가지로 각각의 목적과 용법은 아래 표와 같다
+
+함수명|목적|용법
+-|--|-
+`apply`|기본적 apply|`apply(x,행|열,함수)`
+`lapply`|산출물 :list형식|`lapply(x,행|열,함수)` 
+`sapply`|산출물 :vector형식|`sapply(x,행|열,함수)`
+
+실습 데이터는 *iris*라는 내장 데이터로,추가적인 연구 자료는 [여기](https://www.r-statistics.com/wp-content/uploads/2012/01/source_https.r.txt)에서 구할 수 있다.
+```{r, echo = FALSE}
+data("iris")
+head(iris)
+```
+
+##1) apply
+```{r}
+apply(X = iris[1:20,1:4], MARGIN = 1,FUN =  mean) # MARGIN =1: row 
+apply(X = iris[ ,1:4], MARGIN = 2,FUN =  mean) # MARGIN =2: column
+apply(X = iris[1:20 ,1:4], MARGIN = 2,FUN =  diff)
+```
+`diff` : Returns suitably lagged and iterated differences. 
+
+##2) lapply
+```{r}
+lapply(iris[ ,1:4],mean) #결과물을 dataFram으로 변환 용이
+```
+
+##3) sapply
+```{r}
+sapply(iris[ ,1:4],mean)
+```
+결과적으로 세가지 기능이 크게 차이가 없으니 편한걸로 사용하면 됨.
+
+
+
+#2. which & within
+##1) which
+: 원하는 조건의 컬럼 혹은 로우만 가져오는 함수
+```{r, echo = FALSE}
+data(mtcars)
+head(mtcars)
+```
+```{r}
+mtcars[which(mtcars$mpg <= 20 & mtcars$cyl == 6), ]
+mtcars[, -which(names(mtcars) == "wt")]
+```
+
+##2) within
+   (1)mtcars의 mpg의 평균보다 크거나 같은 경우, 작은 경우의 범주형 변수를 추가
+   (2) wt 변수를 삭제
+ : within 구문을 통해 복제하여 수정/개조, formula를 사용하여 변수를 생성
+```{r}
+class_mtcars <- within(mtcars, {     
+  mpg_class <- ifelse(mpg >= mean(mpg), "U", "L")
+  rm(wt)
+})
+head(class_mtcars)
+```
+
+#3. cut
+ : 연속형 변수를 쉽게 범주화 할때 사용 
+```{r}
+mtcars$disp_class <- NULL
+mtcars$disp_class <- cut(mtcars$disp, breaks = 3, labels = c("L","M","H"))
+head(mtcars)
+```
+ 
+#4. strsplit
+ : 글자를 쪼개 분석할 때 사용하는 함수로, 자세한 용법은 다른편에서 다시 다루기로 하자.
+```{r}
+head(strsplit(rownames(mtcars), split = " "))
+mtcars$brand <- sapply(strsplit(rownames(mtcars), split = " "), "[", 1)
+head(mtcars)
+```
+
+  
+#5 %in%
+: 왼쪽(비교하고자 하는 값)과 오른쪽(비교대상)을 비교해서 해당 인자의 존재 여부에 따라 TRUE/FALSE를 돌려주는 binary operator
+```{r, echo = FALSE}
+# generate data
+dataset <- data.frame(brand = c('Bmw', 'Hyundai', 'kia', 'Merc', 'Chevy', 'Chrysler')
+                      , disp = round(runif(6, 400, 500),1))
+head(dataset)
+```
+```{r}
+dataset$brand %in% mtcars$brand
+sum(dataset$brand %in% mtcars$brand)
+dataset[dataset$brand %in% mtcars$brand,]
+```
+
+
+#6. dplyr
+```{r, echo = FALSE}
+#함수(데이터, 조건)
+#동사(주어, 목적어)
+#2-1 패키지 다운받기 
+#install.packages('dplyr')
+#install.packages('nycflights13') # 예제 데이터 
+#install.packages('reshape2')
+library(dplyr)
+library(nycflights13)
+library(reshape2)
+library(ggplot2)
+head(flights)
+```
+
+##1) dplyr: `filter`
+ : 모든 컬럼은 존재한채, 조건만 실행
+```{r}
+filter(flights, !month <= 5 , !month >= 9) -> flights_2
+table(flights$month)
+    
+filter(flights,dep_time >= 1630)
+filter(flights, month ==1 , dep_time >= 1630)
+# 조건이 2개 이상도 그냥 ','를 사용해서 추가 시켜 줄 수 있음!
+```
+
+##2) dplyr: `select`
+ : 원하는 컬럼을 선택하는 함수
+```{r}
+select(flights, dep_time, arr_time) # dep_time, arr_time 두개의 컬럼을 뽑아냄
+select(flights, month:arr_delay) # 여러개의 컬럼을 이렇게 연속해서 불러 낼 수있음, 이때 컬럼 번호를 몰라도 된다는 장점
+#time과 관련된 모든 컬럼을 뽑아내고자 할때, using [contains]조건문
+select(flights, contains('time'))
+#time와 관련된 모든 컬럼을 빼고자 할때 , using [-]조건문
+select(flights, -contains('time'))
+```
+
+
+##3) dplyr: `arrange`
+ : row 정렬
+```{r}
+arrange(flights, distance)
+arrange(flights, desc(distance)) # distance컬럼을 기준으로 내림차순 정렬
+arrange(flights, distance, dep_time) # distance를 먼저 기준으로 정렬 후 , dep_time을 다음 기준으로 정렬
+```
+
+
+##4) dplyr: `mutate` 
+ : 기존 변수를 토대로 새로운 변수 생성시 사용 !! 중요!! 
+```{r}
+#속력= 거리/시간
+flightsSpeed <- mutate(flights, speed = distance /air_time * 60) # 그런데 이때 거리의 단위는 시간당 마일이기에 60을 곱
+select(flightsSpeed, distance, air_time,speed) # 
+```
+
+
+##5) dplyr: `summarize` 
+ : 말그대로 데이터를 조건별로 정리하여 사용하는 함수로, 활용도가 높으니 다양한 방식으로 응용해 볼 것
+```{r}
+Population <- data.frame(No = 1:6, Region = rep(c("Europe", "Asia", "N.America"), each = 2),
+    Nationality = c("England", "Germany", "Korea", "Japan", "Canada", "USA"),
+    Population = c(53.8, 80.7, 50, 126.3, 36.2, 324))
+Population
+```
+```{r}
+Population%>%
+    group_by(Region)%>%
+    summarise(Average = mean(Population))
+```
+
+```{r}
+plot(Population%>%
+    group_by(Region)%>%
+    summarise(Average = mean(Population)))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
