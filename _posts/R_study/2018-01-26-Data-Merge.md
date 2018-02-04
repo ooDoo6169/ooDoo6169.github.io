@@ -4,16 +4,16 @@ title: "Data_Merge"
 author: "ooDoo"
 date: 2018-01-26
 categories : study
-image: /assets/article_images/title/ocean_onpage.jpg
+cover : /assets/article_images/title/ocean_onpage.jpg
 ---
 
 
 
 
 
-#1. cbind / rbind
+# 1. cbind / rbind
 
-##1) rbind (row + bind = `rbind`)
+## 1) rbind (row + bind = `rbind`)
  : 행 결합 (위 + 아래) : rbind(A, B)  
  두 데이터의 *컬럼*이 동일해야 함
 
@@ -26,10 +26,6 @@ df_2 <- data.frame(id = c("5", "6", "7"),
 
 df <- rbind(df_1, df_2)
 # combine 2 data by row
-{% endhighlight %}
-
-
-{% highlight r %}
 df
 {% endhighlight %}
 
@@ -47,7 +43,7 @@ df
 {% endhighlight %}
 
 
-##2) cbind (column + bind = `cbind`)
+## 2) cbind (column + bind = `cbind`)
  : 열 결합 (왼쪽 열 + 오른쪽 열) : cbind(A, B)
  두 데이터의 *행*이 동일해야 함. 
 
@@ -61,10 +57,6 @@ df_2 <- data.frame(gender = c("M", "F", "M", "M"),
 
 df <- cbind(df_1, df_2)
 # combine 2 data by column
-{% endhighlight %}
-
-
-{% highlight r %}
 df
 {% endhighlight %}
 
@@ -80,7 +72,7 @@ df
 
 
 
-#2. merge
+# 2. merge
  : 두 데이터의 열을 결합할 때 단순히 옆으로만 붙이는 것이 아니라,
   각각의 *key*값에 맞춰서 데이터를 조합해서 붙이는 방식 
   두 데이터에 *key*를 맞춰줄 수 있는 동일한 *column*이 있어야 함
@@ -95,10 +87,6 @@ df_2 <- data.frame(id = c("1", "4" ,"2" ,"3"),
 
 
 df <- merge(df_1, df_2)
-{% endhighlight %}
-
-
-{% highlight r %}
 df
 {% endhighlight %}
 
@@ -124,10 +112,7 @@ df_2 <- data.frame(id = c("1", "4" ,"2" ,"6" ,"3", "5"),
 
 
 df <- merge(df_1, df_2)
-{% endhighlight %}
 
-
-{% highlight r %}
 df
 {% endhighlight %}
 
@@ -145,7 +130,7 @@ df
 ![4가지 join 함수](http://cfile4.uf.tistory.com/image/2464D13755B602E72AFAF0)
 
 
-##1) Inner join 
+## 1) Inner join 
 
 {% highlight r %}
 df_1 <- data.frame(id = c("1", "2" ,"3" ,"4","7","8"), 
@@ -170,7 +155,7 @@ df
 ## 4  4    Damn      F   2,000
 {% endhighlight %}
 
-##2) Outer join
+## 2) Outer join
 
 {% highlight r %}
 df_1 <- data.frame(id = c(1, 2 ,3 ,4,7,8), 
@@ -200,7 +185,7 @@ df
 ## 8  8 Foodding   <NA>    <NA>
 {% endhighlight %}
 
-##3) Left Outer join
+## 3) Left Outer join
 
 {% highlight r %}
 df_1 <- data.frame(id = c(1, 2 ,3 ,4,7,8), 
@@ -228,7 +213,7 @@ df
 ## 6  8 Foodding   <NA>    <NA>
 {% endhighlight %}
 
-##4) Right Outer join
+## 4) Right Outer join
 
 {% highlight r %}
 df_1 <- data.frame(id = c(1, 2 ,3 ,4,7,8), 
@@ -256,11 +241,20 @@ df
 ## 6  6    <NA>      M     100
 {% endhighlight %}
 
-#3. reshape 
+# 3. reshape by `library(reshape2)`
 :우리가 보기에 편한 WIDE LAYOUT을 컴퓨터에게 편한(시각화가 가능한) LONG LAYOUT으로 변환 
 
+
+함수명|목적
+:---:|:---:
+`WIDE LAYOUT`|하나의 행에 여러개의 정보가 들어 있음
+`LONG LAYOUT`|하나의 행에 하나의 정보만 들어가 있음
+
+
+
+
 {% highlight r %}
-# Wide Layout
+# Wide Layout 
 students_wide <- data.frame(student = c("A", "B"),
     korean = c(80, 68),
     math = c(72, 94),
@@ -276,6 +270,7 @@ students_wide
 ## 2       B     68   94      82
 {% endhighlight %}
 
+ 
 
 {% highlight r %}
 # Long Layout
@@ -297,9 +292,50 @@ students_long
 ## 6       B english    82
 {% endhighlight %}
 
-함수명|목적
-:---:|:---:
-`WIDE LAYOUT`|하나의 행에 여러개의 정보가 들어 있음
-`LONG LAYOUT`|하나의 행에 하나의 정보만 들어가 있음
 
+
+
+## 1) melt 
+: Wide Layout --> Long Layout
+*다양한 변수들을 한번에 그래프로 그려내려 할때 유용하게 사용.*
+
+{% highlight r %}
+molten_airq <- melt(airquality,
+        id.vars = c("Month", "Day"),         # it also take 2 id variables
+        variable.name = "climate_variable",  # categories column 
+        value.name = "climate_value")        # value column
+head(molten_airq)
+{% endhighlight %}
+
+
+
+{% highlight text %}
+##   Month Day climate_variable climate_value
+## 1     5   1            Ozone            41
+## 2     5   2            Ozone            36
+## 3     5   3            Ozone            12
+## 4     5   4            Ozone            18
+## 5     5   5            Ozone            NA
+## 6     5   6            Ozone            28
+{% endhighlight %}
+
+
+## 2) dcast
+
+{% highlight r %}
+wide_airq <- dcast(molten_airq, Month+Day ~ climate_variable)  # using '+', we can dcast 2 id variables
+head(wide_airq)
+{% endhighlight %}
+
+
+
+{% highlight text %}
+##   Month Day Ozone Solar.R Wind Temp
+## 1     5   1    41     190  7.4   67
+## 2     5   2    36     118  8.0   72
+## 3     5   3    12     149 12.6   74
+## 4     5   4    18     313 11.5   62
+## 5     5   5    NA      NA 14.3   56
+## 6     5   6    28      NA 14.9   66
+{% endhighlight %}
 
