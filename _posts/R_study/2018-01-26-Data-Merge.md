@@ -241,7 +241,7 @@ df
 ## 6  6    <NA>      M     100
 {% endhighlight %}
 
-# 3. reshape by `library(reshape2)`
+# 3. reshape by `reshape2`function
 :우리가 보기에 편한 WIDE LAYOUT을 컴퓨터에게 편한(시각화가 가능한) LONG LAYOUT으로 변환 
 
 
@@ -249,6 +249,7 @@ df
 :---:|:---:
 `WIDE LAYOUT`|하나의 행에 여러개의 정보가 들어 있음
 `LONG LAYOUT`|하나의 행에 하나의 정보만 들어가 있음
+
 
 
 
