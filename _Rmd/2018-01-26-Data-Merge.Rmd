@@ -146,7 +146,7 @@ df <- merge(x = df_1, y = df_2,
 df
 ```
 
-# 3. reshape by `library(reshape2)`
+# 3. reshape by `reshape2`function
 :우리가 보기에 편한 WIDE LAYOUT을 컴퓨터에게 편한(시각화가 가능한) LONG LAYOUT으로 변환 
 
 
@@ -158,6 +158,7 @@ df
 ```{r, include=FALSE}
 library(reshape2)
 ```
+
 
 ```{r}
 # Wide Layout 
