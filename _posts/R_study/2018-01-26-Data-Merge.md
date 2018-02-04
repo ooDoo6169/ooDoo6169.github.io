@@ -4,7 +4,7 @@ title: "Data_Merge"
 author: "ooDoo"
 date: 2018-01-26
 categories : study
-cover : /assets/instacode.png
+cover : /assets/instacode_sizedown.png
 ---
 
 
