@@ -1,8 +1,10 @@
 ---
+layout : post
 title: "Data-Handling"
 author: "ooDoo"
 date: 2018-01-08
-image: /assets/article_images/title/siba.jpg
+categories : study
+cover : /assets/article_images/title/IMG_8493.JPG
 ---
 
 ```{r setup, include=FALSE}
@@ -33,8 +35,9 @@ apply(X = iris[1:20 ,1:4], MARGIN = 2,FUN =  diff)
 `diff` : Returns suitably lagged and iterated differences. 
 
 ##2) lapply
+ : 결과물을 dataFram으로 변환 용이
 ```{r}
-lapply(iris[ ,1:4],mean) #결과물을 dataFram으로 변환 용이
+lapply(iris[ ,1:4],mean) 
 ```
 
 ##3) sapply
@@ -42,6 +45,7 @@ lapply(iris[ ,1:4],mean) #결과물을 dataFram으로 변환 용이
 sapply(iris[ ,1:4],mean)
 ```
 결과적으로 세가지 기능이 크게 차이가 없으니 편한걸로 사용하면 됨.
+
 
 
 
@@ -69,6 +73,8 @@ class_mtcars <- within(mtcars, {
 head(class_mtcars)
 ```
 
+
+
 #3. cut
  : 연속형 변수를 쉽게 범주화 할때 사용 
 ```{r}
@@ -76,6 +82,8 @@ mtcars$disp_class <- NULL
 mtcars$disp_class <- cut(mtcars$disp, breaks = 3, labels = c("L","M","H"))
 head(mtcars)
 ```
+ 
+ 
  
 #4. strsplit
  : 글자를 쪼개 분석할 때 사용하는 함수로, 자세한 용법은 다른편에서 다시 다루기로 하자.
@@ -85,6 +93,7 @@ mtcars$brand <- sapply(strsplit(rownames(mtcars), split = " "), "[", 1)
 head(mtcars)
 ```
 
+  
   
 #5 %in%
 : 왼쪽(비교하고자 하는 값)과 오른쪽(비교대상)을 비교해서 해당 인자의 존재 여부에 따라 TRUE/FALSE를 돌려주는 binary operator
@@ -103,11 +112,8 @@ dataset[dataset$brand %in% mtcars$brand,]
 
 #6. dplyr
 ```{r, echo = FALSE}
-#함수(데이터, 조건)
-#동사(주어, 목적어)
-#2-1 패키지 다운받기 
 #install.packages('dplyr')
-#install.packages('nycflights13') # 예제 데이터 
+#install.packages('nycflights13') 
 #install.packages('reshape2')
 library(dplyr)
 library(nycflights13)
@@ -123,18 +129,17 @@ filter(flights, !month <= 5 , !month >= 9) -> flights_2
 table(flights$month)
     
 filter(flights,dep_time >= 1630)
-filter(flights, month ==1 , dep_time >= 1630)
-# 조건이 2개 이상도 그냥 ','를 사용해서 추가 시켜 줄 수 있음!
+filter(flights, month ==1 , dep_time >= 1630) # if you wanna 2 conditional option, just use ','
 ```
 
 ##2) dplyr: `select`
  : 원하는 컬럼을 선택하는 함수
 ```{r}
-select(flights, dep_time, arr_time) # dep_time, arr_time 두개의 컬럼을 뽑아냄
-select(flights, month:arr_delay) # 여러개의 컬럼을 이렇게 연속해서 불러 낼 수있음, 이때 컬럼 번호를 몰라도 된다는 장점
-#time과 관련된 모든 컬럼을 뽑아내고자 할때, using [contains]조건문
+select(flights, dep_time, arr_time) # select "dep_time", "arr_time"  column
+select(flights, month:arr_delay) # bring multiple column using ":", also you could bring the column as number
+#if you want bring the all column which contain "time" word in the name, time using [contains()]
 select(flights, contains('time'))
-#time와 관련된 모든 컬럼을 빼고자 할때 , using [-]조건문
+#also subtract the all column whic contain "time" word, using [-contains()]
 select(flights, -contains('time'))
 ```
 
@@ -143,17 +148,17 @@ select(flights, -contains('time'))
  : row 정렬
 ```{r}
 arrange(flights, distance)
-arrange(flights, desc(distance)) # distance컬럼을 기준으로 내림차순 정렬
-arrange(flights, distance, dep_time) # distance를 먼저 기준으로 정렬 후 , dep_time을 다음 기준으로 정렬
+arrange(flights, desc(distance)) # descent arrangement as "distance" column
+arrange(flights, distance, dep_time) # arrnage "distance" column first, and secondly arragne as "dep_time"  
 ```
 
 
 ##4) dplyr: `mutate` 
  : 기존 변수를 토대로 새로운 변수 생성시 사용 !! 중요!! 
 ```{r}
-#속력= 거리/시간
-flightsSpeed <- mutate(flights, speed = distance /air_time * 60) # 그런데 이때 거리의 단위는 시간당 마일이기에 60을 곱
-select(flightsSpeed, distance, air_time,speed) # 
+# speed = distance / time
+flightsSpeed <- mutate(flights, speed = distance /air_time * 60) # the measue of distance is miles per hour, so mulitple 60  
+select(flightsSpeed, distance, air_time,speed)
 ```
 
 
