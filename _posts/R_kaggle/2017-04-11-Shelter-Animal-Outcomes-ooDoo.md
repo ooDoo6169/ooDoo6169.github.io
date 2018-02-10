@@ -300,8 +300,7 @@ train%>%
     geom_point()
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-9](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-9-1.png)
-
+![plot of chunk unnamed-chunk-9](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-9-1.png){width=250px}
 {% highlight r %}
 # Check dietail value for interpolation
 train%>%
@@ -589,7 +588,7 @@ train%>%
     geom_point() 
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-23](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-23-1.png)
+![plot of chunk unnamed-chunk-23](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-23-1.png){width=250px}
 *Through above graph, this one's Sex might be "Neutered Male"*
 
 ###2) INTERPOLATE SexuponOutcome's NA 
@@ -617,7 +616,7 @@ train_1%>%
     geom_col(position = "dodge")
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-25](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-25-1.png)
+![plot of chunk unnamed-chunk-25](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-25-1.png){width=250px}
 
 {% highlight r %}
 train_1%>%
@@ -629,7 +628,7 @@ train_1%>%
     geom_col(position = "dodge")
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-25](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-25-2.png)
+![plot of chunk unnamed-chunk-25](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-25-2.png){width=250px}
 *we could see that if animal has name, her pct of transfer or return to owener is increased.*
 
 ###(2) AS SEX
@@ -671,19 +670,19 @@ library(gridExtra)
 grid.arrange(VIS_1,VIS_2, ncol = 2) # neutralization
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-1.png)
+![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-1.png){width=250px}
 
 {% highlight r %}
 grid.arrange(VIS_3,VIS_4, ncol = 2) # not neutralization
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-2.png)
+![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-2.png){width=250px}
 
 {% highlight r %}
 VIS_5 # i think, unknown also has some meaning.
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-3.png)
+![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-3.png){width=250px}
 *i've made a dummy variable of sexuponoutcome*
 
 ###(3) AS CAT OR DOG
@@ -697,7 +696,7 @@ train_1%>%
     geom_text(aes(label = count), position = position_dodge(width = 1)) # using position dodge and width, i could make text on each col
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-29](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-29-1.png)
+![plot of chunk unnamed-chunk-29](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-29-1.png){width=250px}
 
 
 ###(4) AS BREED
@@ -715,7 +714,7 @@ train_1%>%
     geom_text(aes(label = round(ratio,digits = 2)), stat = ,position = position_dodge(width = 1))
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-1.png)
+![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-1.png){width=250px}
 *sample count btwn mix and pure is too difference => So i use the each ratio value*
 
 
