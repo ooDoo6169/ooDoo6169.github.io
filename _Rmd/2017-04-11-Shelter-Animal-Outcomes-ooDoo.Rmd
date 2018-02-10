@@ -1,0 +1,476 @@
+---
+layout : post
+title: "Shelter Animal Outcomes"
+author: "ooDoo"
+date: 2017-04-11
+categories : kaggle
+cover : /assets/article_images/title/instacode_sizedown.png
+---
+
+#0. SETTING
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# basic package
+library(ggplot2)
+library(ggthemr)
+library(lubridate)
+library(readr)
+library(stringr)
+library(dplyr)
+
+# setwd
+knitr::opts_knit$set(root.dir = "C:/Users/TaeHwan/Desktop/0. R/0. Kaggle/4. Shelter Animal Outcomes/9)Data")
+```
+
+
+#1. DATA IMPORT
+```{r}
+train <- read_csv("train.csv")
+test <- read_csv("test.csv")
+#sample_submission <- read_csv("sample_submission.csv")
+#head(sample_submission)
+#rm(sample_submission)
+```
+
+##1) DATA CHECK 
+```{r}
+# train
+head(train)
+names(train)
+
+# test
+head(test)
+names(test)
+```
+- target variables is only "OutcomeType" 
+
+##2) DATA EXPLORATION
+```{r}
+# Check Object variable
+unique(train$OutcomeType)
+unique(train$OutcomeSubtype)
+# Check what is "Transfer"
+unique(train$OutcomeSubtype[train$OutcomeType == "Transfer"])
+train%>%
+    filter(OutcomeType == "Transfer") %>%
+    select(OutcomeSubtype) %>%
+    group_by(OutcomeSubtype)%>%
+    summarise(count = n())
+```
+
+```{r}
+# Check the others
+unique(train$AnimalType)
+unique(train$SexuponOutcome) # Sex and whether Neutered or not
+table(train$SexuponOutcome)  # don't count number using "length" function. it counts 1 more number, since name row
+unique(train$AgeuponOutcome) # it needs to set the same measure to month 
+table(train$AgeuponOutcome) # it needs to set the same measure to month 
+
+length(unique(train$Breed)) # the number of breed is 1380
+length(unique(train$Color)) # the number of color is 366
+
+head(train)
+#View(train)
+#View(test)
+```
+*in AgeupounOutcome it needs to set the same measure to day*
+*in color and Breed, it needs to classfy higer levels*
+
+
+
+#2. FEATURE HANDLING
+##1) AGE_STR EXTRACT
+```{r}
+Str_Function <- function(x){
+    ifelse(str_split(x, "[ ]")[[1]][2] == "day" | str_split(x, "[ ]")[[1]][2] == "days", as.numeric(str_split(x, "[ ]")[[1]][1]),
+        ifelse(str_split(x, "[ ]")[[1]][2] == "week" | str_split(x, "[ ]")[[1]][2] == "weeks", as.numeric(str_split(x, "[ ]")[[1]][1]) * 7,
+            ifelse(str_split(x, "[ ]")[[1]][2] == "month" | str_split(x, "[ ]")[[1]][2] == "months", as.numeric(str_split(x, "[ ]")[[1]][1]) * 30,
+                ifelse(str_split(x, "[ ]")[[1]][2] == "year" | str_split(x, "[ ]")[[1]][2] == "years", as.numeric(str_split(x, "[ ]")[[1]][1]) * 365,
+                    ifelse(x == "0 years", 350, NA)))))
+    }
+```
+
+###(1) APPLY STR_FUCTION
+```{r}
+# apply Str_Fuction to train
+train$AGE <- NULL
+train$AGE <- sapply(train$AgeuponOutcome, FUN = Str_Function)
+table(is.na(train$AGE))
+
+# apply Str_Fuction to test
+test$AGE <- NULL
+test$AGE <- sapply(test$AgeuponOutcome, FUN = Str_Function)
+```
+*but there is still 84 NAs in "Ageuponoutcom" variable*
+
+###(2) INTERPOLATE INFORMATION
+```{r}
+# Check NA's feature
+## Train
+train%>%
+    dplyr::select(-c(AnimalID, DateTime)) %>%
+    filter(is.na(AGE) == TRUE)
+
+## TEST
+test%>%
+    filter(is.na(AGE) == TRUE)
+```
+*: NA of AGE's feature*
+ - 2016.02
+ - almost is cat and transfer
+
+```{r}
+# Check distribution
+train%>%
+    mutate(Income_Year = year(DateTime),
+    Income_Month = month(DateTime),
+    Income_Day = day(DateTime))%>%
+    filter(Income_Year == 2016 & Income_Month == 2,
+           Breed == "Domestic Shorthair Mix",
+           is.na(AGE) == FALSE,
+           AnimalType == "Cat") %>%    
+    ggplot(aes(x = OutcomeType, y = AGE, color = OutcomeType)) +
+    geom_boxplot() +
+    geom_point()
+
+# Check dietail value for interpolation
+train%>%
+    mutate(Income_Year = year(DateTime),
+    Income_Month = month(DateTime),
+    Income_Day = day(DateTime))%>%
+    filter(Income_Year == 2016 & Income_Month == 2,
+           Breed == "Domestic Shorthair Mix",
+           is.na(AGE) == FALSE,
+           AnimalType == "Cat") %>%    
+    group_by(OutcomeType)%>%
+    summarise(Mid = median(AGE))
+    #summarise(Mean = mean(AGE)) 
+```
+*i'm gonna using median, since there is a huge outlier in train case.*
+
+###(3) AGE INTERPOLATE
+```{r}
+# train
+train$AGE[is.na(train$AGE) == "TRUE"] <- 730 
+table(is.na(train$AGE))
+
+# test
+test$AGE[is.na(test$AGE) == "TRUE"] <- 730 
+table(is.na(test$AGE))
+unique(train$SexuponOutcome)
+```
+
+##2) FEATURE EXTRACT
+```{r}
+FeatureExtract <- function(data){
+    data%>%
+        # Date Varible
+        mutate(Income_Year = year(DateTime),
+               Income_Month = as.factor(month(DateTime)),
+               Income_Day = day(DateTime)) %>%
+        # Change AGE variable as numeric 
+        mutate(AGE = as.numeric(AGE))%>%
+        # Name and SexuponOutcome Dummy
+        mutate(Name = ifelse(is.na(Name)== FALSE , "N_O", "N_X"),
+               Neutered_Dummy = ifelse(SexuponOutcome == "Neutered Male" | SexuponOutcome == "Spayed Female", 1 , 0))%>%
+        
+        # drop the unnecessary column
+        select(-c(DateTime, AgeuponOutcome))
+}
+```
+```{r}
+# Apply
+train_1 <- FeatureExtract(train)
+train_1%>%
+    select(-c(AnimalID, OutcomeSubtype)) -> train_1
+test_1 <- FeatureExtract(test)
+```
+
+###(1) BREED_PURE
+```{r}
+# Breed_Str_Function
+Breed_Str_Function <- function(data){
+    ifelse(grepl('Mix', data) == TRUE, "Mix",
+        ifelse(grepl("/", data) == TRUE,"with", "Pure"))
+}
+```
+
+```{r}
+# apply
+train_1$Breed_Pure <- NULL
+train_1$Breed_Pure <- sapply(train_1$Breed, FUN = Breed_Str_Function)
+
+test_1$Breed_Pure <- NULL
+test_1$Breed_Pure <- sapply(test_1$Breed, FUN = Breed_Str_Function)
+```
+
+
+###(2) COLOR_SIMPLE
+```{r}
+# Color_Str_Function
+Color_Str_Function <- function(data){
+    str_split(data, "[/]")[[1]][1]
+}
+```
+
+```{r}
+# apply
+train_1$Color_simple <- NULL
+train_1$Color_simple <- sapply(train_1$Color, FUN = Color_Str_Function)
+
+test_1$Color_simple <- NULL
+test_1$Color_simple <- sapply(test_1$Color, FUN = Color_Str_Function)
+```
+
+
+```{r}
+train_1%>%
+    group_by(Color)%>%
+    summarise(count = n()) %>%
+    arrange(desc(count), Color)
+
+train_1%>%
+    group_by(Color_simple)%>%
+    summarise(count = n()) %>%
+    arrange(desc(count), Color_simple)
+```
+
+
+
+###(3) BREED_SIMPLE
+```{r}
+i = unique(train_1$AnimalType)[2]
+head(train_1$Breed)
+for(i in unique(train_1$AnimalType)){
+    train_1%>%
+        filter(AnimalType == i)%>%
+        group_by(Breed)%>%
+        summarise(count = n())%>%
+        arrange(desc(count)) -> k 
+
+    assign(paste0('train_',as.factor(i),'Breed Count'), k)
+}
+head(`train_CatBreed Count`)
+head(`train_DogBreed Count`)
+```
+*We could see that there is too much breed speiecs in dog data*
+
+```{r}
+# BREED_Str_Function
+Breed_Str_Function <- function(data){
+    str_split(data, "[/]")[[1]][1]
+}
+```
+
+```{r}
+# apply
+train_1$Breed_simple <- NULL
+train_1$Breed_simple <- sapply(train_1$Breed, FUN = Breed_Str_Function)
+
+test_1$Breed_simple <- NULL
+test_1$Breed_simple <- sapply(test_1$Breed, FUN = Breed_Str_Function)
+```
+
+```{r}
+#result
+length(unique(train$Breed))  # before simplify
+length(unique(train_1$Breed_simple)) # after simplify
+```
+
+
+##3) LIST WISE DELETION
+```{r}
+# train
+nrow(train_1) # 26,729 row, before to list wise deletion
+nrow(train_1[complete.cases(train_1),]) # 26728 row, after list wise deletion 
+train_1[complete.cases(train_1) == FALSE,]
+# train_1 <- train_1[complete.cases(train_1) == TRUE,] # if i could know the relation btwn AGE and Sex as Animaltype, i could guess this NA also.  
+                                                       # So i'm gonna do this next paragraph
+
+# test
+nrow(test_1)
+nrow(test_1[complete.cases(test_1) == FALSE,]) # there is no more NA in test data
+```
+
+###1) RELATIONSHIP BTWN AGE, SEX AS ANIMALTYPE
+```{r}
+train%>%
+    filter(is.na(SexuponOutcome) == FALSE,
+           AnimalType == "Dog",
+           Breed == "Dachshund",
+           OutcomeType == "Return_to_owner") %>%
+    ggplot(aes(x = SexuponOutcome , y = AGE, fill = SexuponOutcome)) +
+    geom_boxplot() +
+    geom_point() 
+```
+*Through above graph, this one's Sex might be "Neutered Male"*
+
+###2) INTERPOLATE SexuponOutcome's NA 
+```{r}
+# Interpolation
+train_1[!complete.cases(train_1),"SexuponOutcome"]  <- "Neutered Male"
+train_1[!complete.cases(train_1),"Sex_Dummy"]  <- 1
+# check
+train_1[complete.cases(train_1) == FALSE,] # now, there is no more NA !
+```
+
+
+
+#3. VISUALIZAION
+##1) OUTCOME
+###(1) AS NAME EXISTENCE
+```{r}
+train_1%>%
+    group_by(Name, OutcomeType)%>%
+    summarise(count = n()) %>%
+    arrange(OutcomeType) %>% 
+    ggplot(aes(x = reorder(OutcomeType, count), y = count, fill = Name)) +
+    geom_col(position = "dodge")
+
+train_1%>%
+    mutate(OutcomeType_2 = ifelse(OutcomeType == "Died" | OutcomeType == "Euthanasia", "Bad", "Good")) %>%
+    group_by(Name, OutcomeType, OutcomeType_2)%>%
+    summarise(count = n()) %>%
+    arrange(OutcomeType) %>% 
+    ggplot(aes(x = reorder(OutcomeType_2, count), y = count, fill = Name)) +
+    geom_col(position = "dodge")
+```
+*we could see that if animal has name, her pct of transfer or return to owener is increased.*
+
+###(2) AS SEX
+```{r}
+table((train_1$SexuponOutcome))
+```
+
+```{r}
+for(i in 1:length(unique(train_1$SexuponOutcome))){
+train_1%>%
+    filter(SexuponOutcome == unique(train_1$SexuponOutcome)[i])%>%
+    group_by(OutcomeType)%>%
+    summarise(count = n()) %>%
+    ggplot(aes(x = OutcomeType, y = count,  fill = OutcomeType)) +
+    geom_col(position = "dodge") +
+    ggtitle(unique(train_1$SexuponOutcome)[i]) +
+    geom_text(aes(label = count)) +
+    theme(legend.position="none", 
+          axis.text.x = element_text(angle = 90, face = "italic", vjust = 1 ,hjust = 1),
+          plot.title = element_text(face = "bold.italic", hjust = 0.5)) -> k
+   
+     assign(paste0("VIS_",i), k)
+}
+```
+```{r}
+library(gridExtra)
+grid.arrange(VIS_1,VIS_2, ncol = 2) # neutralization
+grid.arrange(VIS_3,VIS_4, ncol = 2) # not neutralization
+VIS_5 # i think, unknown also has some meaning.
+```
+*i've made a dummy variable of sexuponoutcome*
+
+###(3) AS CAT OR DOG
+```{r}
+train_1%>%
+    group_by(OutcomeType, AnimalType)%>%
+    summarise(count = n())%>%
+    ggplot(aes(x = OutcomeType, y = count , fill = AnimalType)) +
+    geom_col(position = "dodge") +
+    geom_text(aes(label = count), position = position_dodge(width = 1)) # using position dodge and width, i could make text on each col
+```
+
+
+###(4) AS BREED
+ :finding whether purebred or not
+```{r}
+train_1%>%
+    group_by(OutcomeType, Breed_Pure) %>%
+    summarise(count = n()) %>%
+    group_by(Breed_Pure) %>%
+    mutate(count_sum = sum(count),
+           ratio = count / count_sum) %>%
+    ggplot(aes(x = OutcomeType, y = ratio, fill = factor(Breed_Pure))) +
+    geom_col(position = "dodge") +
+    geom_text(aes(label = round(ratio,digits = 2)), stat = ,position = position_dodge(width = 1))
+```
+*sample count btwn mix and pure is too difference => So i use the each ratio value*
+
+
+###(5) AS COLOR
+```{r}
+# original color 
+for(i in 1:length(unique(train_1$OutcomeType))){
+    train_1%>%
+    filter(OutcomeType == unique(OutcomeType)[i]) %>%
+    group_by(Color)%>%
+    summarise(count = n()) %>%
+    ggplot(aes(x = Color, y = count, fill = Color)) +
+    geom_col() +
+    ggtitle(unique(train_1$OutcomeType)[i]) +
+    theme(legend.position="none", 
+          axis.text.x = element_text(angle = 90, face = "italic", vjust = 1 ,hjust = 1),
+          plot.title = element_text(face = "bold.italic", hjust = 0.5)) -> k
+    print(k)
+}
+```
+
+```{r}
+# simple color
+for(i in 1:length(unique(train_1$OutcomeType))){
+    train_1%>%
+    filter(OutcomeType == unique(OutcomeType)[i]) %>%
+    group_by(Color_simple)%>%
+    summarise(count = n()) %>%
+    ggplot(aes(x = Color_simple, y = count, fill = Color_simple)) +
+    geom_col() +
+    ggtitle(unique(train_1$OutcomeType)[i]) +
+    theme(legend.position="none", 
+          axis.text.x = element_text(angle = 90, face = "italic", vjust = 1 ,hjust = 1),
+          plot.title = element_text(face = "bold.italic", hjust = 0.5)) -> k
+    print(k)
+}
+```
+
+#4. DIVIDING CAT & DOG
+```{r}
+
+```
+
+
+
+#5. MODELING
+##1) ONE HOT ENCODING
+```{r}
+# data
+train_1
+#train_shelter_mat <- model.matrix(OutcomeType ~ +. , train_1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
