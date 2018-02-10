@@ -300,7 +300,8 @@ train%>%
     geom_point()
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-9](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-9-1.png){width=250px}
+![plot of chunk unnamed-chunk-8](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-8-1.png)
+
 {% highlight r %}
 # Check dietail value for interpolation
 train%>%
@@ -588,7 +589,7 @@ train%>%
     geom_point() 
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-23](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-23-1.png){width=250px}
+![plot of chunk unnamed-chunk-22](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-22-1.png)
 *Through above graph, this one's Sex might be "Neutered Male"*
 
 ###2) INTERPOLATE SexuponOutcome's NA 
@@ -616,7 +617,7 @@ train_1%>%
     geom_col(position = "dodge")
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-25](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-25-1.png){width=250px}
+![plot of chunk unnamed-chunk-24](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-24-1.png)
 
 {% highlight r %}
 train_1%>%
@@ -628,7 +629,7 @@ train_1%>%
     geom_col(position = "dodge")
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-25](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-25-2.png){width=250px}
+![plot of chunk unnamed-chunk-24](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-24-2.png)
 *we could see that if animal has name, her pct of transfer or return to owener is increased.*
 
 ###(2) AS SEX
@@ -670,19 +671,19 @@ library(gridExtra)
 grid.arrange(VIS_1,VIS_2, ncol = 2) # neutralization
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-1.png){width=250px}
+![plot of chunk unnamed-chunk-27](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-27-1.png)
 
 {% highlight r %}
 grid.arrange(VIS_3,VIS_4, ncol = 2) # not neutralization
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-2.png){width=250px}
+![plot of chunk unnamed-chunk-27](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-27-2.png)
 
 {% highlight r %}
 VIS_5 # i think, unknown also has some meaning.
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-3.png){width=250px}
+![plot of chunk unnamed-chunk-27](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-27-3.png)
 *i've made a dummy variable of sexuponoutcome*
 
 ###(3) AS CAT OR DOG
@@ -696,7 +697,7 @@ train_1%>%
     geom_text(aes(label = count), position = position_dodge(width = 1)) # using position dodge and width, i could make text on each col
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-29](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-29-1.png){width=250px}
+![plot of chunk unnamed-chunk-28](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-28-1.png)
 
 
 ###(4) AS BREED
@@ -714,7 +715,7 @@ train_1%>%
     geom_text(aes(label = round(ratio,digits = 2)), stat = ,position = position_dodge(width = 1))
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-1.png){width=250px}
+![plot of chunk unnamed-chunk-29](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-29-1.png)
 *sample count btwn mix and pure is too difference => So i use the each ratio value*
 
 
@@ -737,7 +738,7 @@ for(i in 1:length(unique(train_1$OutcomeType))){
 }
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-1.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-2.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-3.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-4.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-5.png)
+![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-1.png)![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-2.png)![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-3.png)![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-4.png)![plot of chunk unnamed-chunk-30](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-30-5.png)
 
 
 {% highlight r %}
@@ -757,7 +758,7 @@ for(i in 1:length(unique(train_1$OutcomeType))){
 }
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-32](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-32-1.png)![plot of chunk unnamed-chunk-32](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-32-2.png)![plot of chunk unnamed-chunk-32](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-32-3.png)![plot of chunk unnamed-chunk-32](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-32-4.png)![plot of chunk unnamed-chunk-32](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-32-5.png)
+![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-1.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-2.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-3.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-4.png)![plot of chunk unnamed-chunk-31](/assets/R_kaggle/2017-04-11-Shelter-Animal-Outcomes-ooDoo/unnamed-chunk-31-5.png)
 
 #4. DIVIDING CAT & DOG
 
