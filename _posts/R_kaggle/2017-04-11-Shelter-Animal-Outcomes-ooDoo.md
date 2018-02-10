@@ -7,11 +7,11 @@ categories : kaggle
 cover : /assets/article_images/title/instacode_sizedown.png
 ---
 
-#0. SETTING
+# 0. SETTING
 
 
 
-#1. DATA IMPORT
+# 1. DATA IMPORT
 
 {% highlight r %}
 train <- read_csv("train.csv")

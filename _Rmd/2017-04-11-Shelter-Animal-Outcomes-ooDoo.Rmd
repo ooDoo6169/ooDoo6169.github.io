@@ -7,7 +7,7 @@ categories : kaggle
 cover : /assets/article_images/title/instacode_sizedown.png
 ---
 
-#0. SETTING
+# 0. SETTING
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -24,7 +24,7 @@ knitr::opts_knit$set(root.dir = "C:/Users/TaeHwan/Desktop/0. R/0. Kaggle/4. Shel
 ```
 
 
-#1. DATA IMPORT
+# 1. DATA IMPORT
 ```{r}
 train <- read_csv("train.csv")
 test <- read_csv("test.csv")
