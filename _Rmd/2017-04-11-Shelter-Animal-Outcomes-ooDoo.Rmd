@@ -360,6 +360,7 @@ train_1%>%
      assign(paste0("VIS_",i), k)
 }
 ```
+
 ```{r}
 library(gridExtra)
 grid.arrange(VIS_1,VIS_2, ncol = 2) # neutralization
