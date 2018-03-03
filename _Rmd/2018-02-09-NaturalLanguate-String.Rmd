@@ -2,7 +2,7 @@
 layout : post
 title: "Natural Language Processing & Stringr"
 author: "ooDoo"
-date: 2018-01-26
+date: 2018-03-03
 categories : study
 cover : /assets/article_images/title/instacode_sizedown.png
 ---
@@ -79,7 +79,6 @@ head(mtcars)
 
 head(strsplit(rownames(mtcars), split = " "))
 mtcars$brand <- sapply(strsplit(rownames(mtcars), split = " "), "[", 1)
-
 ```
 
   
