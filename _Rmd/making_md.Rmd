@@ -32,8 +32,8 @@ file <- paste0(rmds, "/", filename)
 ### 파일 경로 설정
 fig.path <- paste0(figs.path, sub(".Rmd$", "", basename(file)), "/")
 opts_chunk$set(fig.path = fig.path)
-#opts_chunk$set(fig.width=12, fig.height=12) 
-opts_chunk$set(dpi = 72) 
+opts_chunk$set(fig.width=12, fig.height=12) 
+opts_chunk$set(dpi = 144) 
 
 ### suppress messages
 opts_chunk$set(cache = F, warning = F, message = F, cache.path = "_cache/", tidy = F)
