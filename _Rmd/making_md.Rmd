@@ -16,14 +16,14 @@ rmds <- "_Rmd"
 setwd(base)
 list.files()
 # 파일 이름 지정
-filename <- "2017-04-11-Shelter-Animal-Outcomes-ooDoo.Rmd"  # check here!!!!!
+filename <- "2018-02-09-NaturalLanguate-String.Rmd"  # check here!!!!!
 
 # 폴더 경로들
-figs.path <- "assets/R_kaggle/"
-posts.path <- "_posts/R_kaggle/"
+figs.path <- "assets/R_study/"
+posts.path <- "_posts/R_study/"
 
 # Rmd -> md 변환
-require(knitr)
+require(knitr)5
 render_jekyll(highlight = "pygments")
 opts_knit$set(base.url="/")
 
@@ -32,7 +32,7 @@ file <- paste0(rmds, "/", filename)
 ### 파일 경로 설정
 fig.path <- paste0(figs.path, sub(".Rmd$", "", basename(file)), "/")
 opts_chunk$set(fig.path = fig.path)
-opts_chunk$set(fig.width=12, fig.height=12) 
+opts_chunk$set(fig.width=10, fig.height= 7) 
 opts_chunk$set(dpi = 144) 
 
 ### suppress messages

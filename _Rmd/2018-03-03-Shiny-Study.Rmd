@@ -1,0 +1,84 @@
+---
+layout : post
+title: "Natural Language Processing & Stringr"
+author: "ooDoo"
+date: 2018-03-03
+categories : study
+cover : /assets/article_images/title/instacode_sizedown.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(stringr)
+```
+
+
+#1. stringr package
+```{r}
+#Examples
+shopping_list <- c("apples x4", "bag of flour", "bag of sugar", "milk x2")
+shopping_list
+```
+
+
+## 1) str_extract
+: 특정 조건만을 *벡터로* 추출하는 함수
+```{r}
+str_extract(shopping_list, "\\d")              # extract number only as character type
+str_extract(shopping_list, "[a-z]+")           # extract word only 
+str_extract(shopping_list, "[a-z]{1,4}")       # extract first 4word mong character
+str_extract(shopping_list, "\\b[a-z]{1,4}\\b") # extract only under 4word among character
+```
+
+
+## 2) str_extract_all
+### (1) list
+: 특정 조건만을 *리스트*로 추출하는 함수
+```{r}
+# Extract all matches
+str_extract_all(shopping_list, "\\d")          # extract number only as list
+str_extract_all(shopping_list, "[a-z]+")       # extract all character only as list
+str_extract_all(shopping_list, "\\b[a-z]+\\b") # extract word only but execpt word pated with numbe r as list
+```
+
+
+### (2) matrix
+: 특정 조건만을 *메트릭스*로 추출하는 함수
+```{r}
+# Simplify results into character matrix
+str_extract_all(shopping_list, "\\d", simplify = TRUE)
+str_extract_all(shopping_list, "\\b[a-z]+\\b", simplify = TRUE)
+```
+
+
+### (3) extract_all
+```{r}
+# Extract all words
+str_extract_all("This is, suprisingly, a sentence.", boundary("word"))
+```
+
+## 3) str_split  
+: 특정 패턴을 기준으로 모든 단어를 쪼개는 방식
+```{r}
+# split by pattern
+shopping <- "abc,ekq.qpwe*dfji"
+str_split(shopping, "[ ]")
+str_split(shopping, "[*]")
+str_split(shopping, "[,.]")
+str_split(shopping, "[,.]")[[1]][2]
+```
+
+
+### (1) strsplit
+ : 특정 패턴을 기준으로 단어를 쪼개는 기본 함수
+ ※ apply 함수와 함께 사용하여, 모든 row에 일괄 적용 
+```{r}
+head(mtcars)
+
+head(strsplit(rownames(mtcars), split = " "))
+mtcars$brand <- sapply(strsplit(rownames(mtcars), split = " "), "[", 1)
+```
+
+  
