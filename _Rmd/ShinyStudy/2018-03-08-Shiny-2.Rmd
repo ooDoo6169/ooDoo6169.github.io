@@ -1,0 +1,206 @@
+---
+layout : post
+title: "Shiny_study_2"
+subtitle: "build your first app from scratch."
+author: "ooDoo"
+date: 2018-03-09
+categories : study
+cover : /assets/article_images/title/instacode_sizedown.png
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Layout
+
+This lesson will show you how to build a user interface for your app. You will learn how to lay out the user interface and then add text, images, and other HTML elements to your Shiny app.
+
+```{r}
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+This code is the bare minimum needed to create a Shiny app
+
+
+# 2. fluidPage
+: make titlePanel and side barLayout
+
+```{r}
+ui <- fluidPage(
+  titlePanel("title panel"),
+
+  sidebarLayout(
+    sidebarPanel("sidebar panel"),
+    mainPanel("main panel")
+  )
+)
+```
+
+## 1) sidebarLayout's two arguments
+• `sidebarPanel` : function output
+• `mainPanel` : function output
+
+```{r}
+ui <- fluidPage(
+  titlePanel("title panel"),
+  
+  sidebarLayout(position = "right",
+                sidebarPanel("sidebar panel"),
+                mainPanel("main panel")
+  )
+)
+```
+
+titlePanel and sidebarLayout create a basic layout for your Shiny app, but you can also create more advanced layouts. You can use navbarPage to give your app a multi-page user interface that includes a navigation bar. Or you can use fluidRow and column to build your layout up from a grid system. If you’d like to learn more about these advanced options, read the ![Shiny Application Layout Guide](https://shiny.rstudio.com/articles/layout-guide.html). We will stick with sidebarLayout in this tutorial.
+
+
+# 3. HTML content
+
+shiny function HTML5 equivalent creates
+
+p <p> A paragraph of text 
+h1 <h1> A first level header 
+h2 <h2> A second level header 
+h3 <h3> A third level header 
+h4 <h4> A fourth level header 
+h5 <h5> A fifth level header 
+h6 <h6> A sixth level header 
+a <a> A hyper link 
+br <br> A line break (e.g. a blank line) 
+div <div> A division of text with a uniform style 
+span <span> An in-line division of text with a uniform style 
+pre <pre> Text ‘as is’ in a fixed width font 
+code <code> A formatted block of code 
+img <img> An image 
+strong <strong> Bold text 
+em <em> Italicized text 
+HTML   Directly passes a character string as HTML code 
+
+
+# 4. Headers
+```{r}
+ui <- fluidPage(
+  titlePanel("My Star Wars App"),
+  sidebarLayout(
+    sidebarPanel(),
+    mainPanel(
+      h6("Episode IV", align = "center"),
+      h6("A NEW HOPE", align = "center"),
+      h5("It is a period of civil war.", align = "center"),
+      h4("Rebel spaceships, striking", align = "center"),
+      h3("from a hidden base, have won", align = "center"),
+      h2("their first victory against the", align = "center"),
+      h1("evil Galactic Empire.")
+    )
+  )
+)
+```
+
+
+# 5. Formatted text
+```{r}
+ui <- fluidPage(
+  titlePanel("My Shiny App"),
+  sidebarLayout(
+    sidebarPanel(),
+    mainPanel(
+      p("p creates a paragraph of text."),
+      p("A new p() command starts a new paragraph. Supply a style attribute to change the format of the entire paragraph.", style = "font-family: 'times'; font-si16pt"),
+      strong("strong() makes bold text."),
+      em("em() creates italicized (i.e, emphasized) text."),
+      br(),
+      code("code displays your text similar to computer code"),
+      div("div creates segments of text with a similar style. This division of text is all blue because I passed the argument 'style = color:blue' to div", style = "color:blue"),
+      br(),
+      p("span does the same thing as div, but it works with",
+        span("groups of words", style = "color:blue"),
+        "that appear inside a paragraph.")
+    )
+  )
+)
+```
+
+
+# 6. Images
+```{r}
+img(src = "my_image.png", height = 72, width = 72)
+```
+The img function looks for your image file in a specific place. Your file must be in a folder named `www` in the same directory as the app.R script. Shiny treats this directory in a special way. Shiny will share any file placed here with your user’s web browser, which makes `www` a great place to put images, style sheets, and other things the browser will need to build the wep components of your Shiny app.
+
+```{r}
+ui <- fluidPage(
+  titlePanel("My Shiny App"),
+  sidebarLayout(
+    sidebarPanel(),
+    mainPanel(
+      img(src = "rstudio.png", height = 140, width = 400)
+    )
+  )
+)
+```
+
+
+# 7. Test 
+```{r}
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  titlePanel("My Shiny App"),
+  sidebarLayout(
+    sidebarPanel(
+      h2("Installation"),
+      p("Shiny is available on CRAN, so you can install it in the usual way from your R console:"),
+      code('install.packages("shiny")'),
+      br(),
+      br(),
+      br(),
+      br(),
+      img(src = "rstudio.png", height = 70, width = 200),
+      br(),
+      "Shiny is a product of ", 
+      span("RStudio", style = "color:blue")
+    ),
+    mainPanel(
+      h1("Introducing Shiny"),
+      p("Shiny is a new package from RStudio that makes it ", 
+        em("incredibly easy "), 
+        "to build interactive web applications with R."),
+      br(),
+      p("For an introduction and live examples, visit the ",
+        a("Shiny homepage.", 
+          href = "http://shiny.rstudio.com")),
+      br(),
+      h2("Features"),
+      p("- Build useful web applications with only a few lines of code—no JavaScript required."),
+      p("- Shiny applications are automatically 'live' in the same way that ", 
+        strong("spreadsheets"),
+        " are live. Outputs change instantly as users modify inputs, without requiring a reload of the browser.")
+    )
+  )
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+
+

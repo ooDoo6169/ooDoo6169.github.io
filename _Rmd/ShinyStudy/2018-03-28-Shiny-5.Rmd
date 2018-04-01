@@ -1,0 +1,204 @@
+---
+layout : post
+title: "Shiny_study_5"
+subtitle: "Use R scripts and data "
+author: "ooDoo"
+date: 2018-03-18
+categories : study
+cover : /assets/article_images/title/instacode_sizedown.png
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+# install.packages(c("maps", "mapproj")) # helpers.R uses the maps and mapproj packages in R
+
+
+# set the working directory 
+knitr::opts_knit$set(root.dir = "C:/Users/TaeHwan/Desktop/0. R/10. Shiny/ShinyStudy")
+```
+
+# 1. roads the data
+```{r}
+counties <- readRDS("counties.rds")
+head(counties)
+```
+
+
+# 2. helpers.r
+: R script that can help you make choropleth maps(단계 구분도)
+ ※ *A choropleth map : a map that uses color to display the regional variation of a variable*
+
+## 1) 5 argumnets of `percent_map` funtion in helpers.R
+Argument|Input
+:---:|:---:
+`var` | a column vector from the counties.rds dataset 
+`color` | any character string you see in the output of colors() 
+`legend.title` | A character string to use as the title of the plot’s legend 
+`max` | A parameter for controlling shade range (defaults to 100) 
+`min` | A parameter for controlling shade range (defaults to 0) 
+
+## 2) plots the counties data as a choropleth map *using helpers.R*
+```{r}
+library(maps) 
+library(mapproj)
+source("helpers.R")
+counties <- readRDS("counties.rds")
+percent_map(var = counties$white,
+            color = "royalblue",
+            legend.title =  "% White")
+```
+
+# 3. Loading files and file paths
+위에서 `source` 함수와 `readRDS`함수는 파일 경로를 필요로 한다.(나는 wd를 설정해주었기에 이를 따로 명시하지 않았다.) 
+하지만, shiny를 작동하는데 있어서 `server.R`을 지정해놓은 파일이 곧 해당 shiny app의 Working Directory가 될 것이기에 같은 파일안에 데이터와 source파일을 위치시키자.
+
+
+# 4. Execution
+: shiny는 모든 당신의 app.R 스크립트에 위치한 모든 commands를 한꺼번에 실행한다. 하지만, 당신이 해당 commands를 어디에 위치시키는지에 따라 해당 commands가 몇번 실행되는지는 다르게 결정되는데, 이는 당신의 app의 성능에 영향을 미치게 된다. 그 이유는 shiny는 당신의app.R script의 특정 section을 다른 section보다 더 자주 실행하기 때문이다.
+
+Shiny saves the server function until a new user arrives. Each time a new user visits your app, Shiny runs the server function again, one time. The function helps Shiny build a distinct set of reactive objects for each user.
+
+As users interact with the widgets and change their values, Shiny will re-run the R expressions assigned to each reactive object that depend on a widget whose value was changed. If your user is very active, these expressions may be re-run many, many times a second.
+
+[요약]
+• `shinyApp function`은 app을 설치할 때 한번 실행
+• `server funciton`은 매번app을 방문할 때마다 한번씩 실행됨
+• `render*`함수 안에 있는 `R expressions`은 유저가 widget의 값을 변경할 때마다 실행됨
+
+
+# 5. Tip to placing the funtion right place using above information 
+## 1) `server function` 외부 : Source scripts, load libraries, and read data sets
+
+## 2) `server function` 내부(utside of any render* calls) : 사용자의 specific objects
+
+## 3) inside of a `render*` : place code that Shiny must rerun to build an object
+: *Shiny will rerun all of the code in a "render" chunk each time a user changes a widget mentioned in the chunk* 
+
+
+# 6. Practice
+## 1) 1st Step
+```{r}
+# basic setting to build active map using "helpers.R"
+source("helpers.R") # Source helper functions
+counties <- readRDS("counties.rds") # Load data 
+
+library(maps)
+library(mapproj)
+
+# build app
+# User interface ----
+ ui <- fluidPage(
+  titlePanel("censusVis"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create demographic maps with 
+        information from the 2010 US Census."),
+      
+      selectInput(inputId = "var", 
+                  label = "Choose a variable to display",
+                  choices = c("Percent White", "Percent Black",
+                              "Percent Hispanic", "Percent Asian"),
+                  selected = "Percent White"),
+      
+      sliderInput(inputId = "range", 
+                  label = "Range of interest:",
+                  min = 0, max = 100, value = c(0, 100))
+    ),
+    
+    mainPanel(plotOutput("map")) # setting the place of map
+    )
+)
+
+# Server logic ----
+server <- function(input, output) {
+  output$map <- renderPlot({
+    percent_map(var = counties$white,
+                color = "plum2",
+                legend.title = "census")
+  })
+}
+
+# Run app ----
+shinyApp(ui, server)
+```
+
+
+## 2) 2nd Step
+```{r}
+# basic setting to build active map using "helpers.R"
+source("helpers.R") # Source helper functions
+counties <- readRDS("counties.rds") # Load data 
+
+library(maps)
+library(mapproj)
+
+# build app
+# User interface ----
+ ui <- fluidPage(
+  titlePanel("censusVis"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create demographic maps with 
+        information from the 2010 US Census."),
+      
+      selectInput(inputId = "var", 
+                  label = "Choose a variable to display",
+                  choices = c("Percent White", "Percent Black",
+                              "Percent Hispanic", "Percent Asian"),
+                  selected = "Percent White"),
+      
+      sliderInput(inputId = "range", 
+                  label = "Range of interest:",
+                  min = 0, max = 100, value = c(0, 100))
+    ),
+    
+    mainPanel(plotOutput("map")) # setting the place of map
+    )
+)
+
+# Server logic ----
+server <- function(input, output) {
+  output$map <- renderPlot({
+    data <- switch(input$var,    # switch the data 
+                   "Percent White" = counties$white,
+                   "Percent Black" = counties$black,
+                   "Percent Hispanic" = counties$hispanic,
+                   "Percent Asian" = counties$asian)
+    
+    color <- switch(input$var,   # switch the color
+                    "Percent White" = "darkgreen",
+                    "Percent Black" = "black",
+                    "Percent Hispanic" = "darkorange",
+                    "Percent Asian" = "darkviolet")
+    
+    legend <- switch(input$var,  # switch the legend
+                     "Percent White" = "% White",
+                     "Percent Black" = "% Black",
+                     "Percent Hispanic" = "% Hispanic",
+                     "Percent Asian" = "% Asian")
+    
+    percent_map(var = data,
+                color = color,
+                legend.title = legend,
+                min = input$range[1], 
+                max = input$range[2])
+  })
+}
+
+# Run app ----
+shinyApp(ui, server)
+```
+
+
+# 7. Recap
+
+Keep in mind:
+•The directory that app. R appears in will become the working directory of the Shiny app
+
+•Shiny will run code placed at the start of app.R, before the server function, only once during the life of the app.
+
+•Shiny will run code placed inside server function multiple times, which can slow down the app.

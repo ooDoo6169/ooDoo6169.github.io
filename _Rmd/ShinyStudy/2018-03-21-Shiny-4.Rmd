@@ -1,0 +1,200 @@
+---
+layout : post
+title: "Shiny_study_4"
+subtitle: "Display reactive output"
+author: "ooDoo"
+date: 2018-03-12
+categories : study
+cover : /assets/article_images/title/instacode_sizedown.png
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+```
+
+# 1. Two steps
+
+## 1) Step 1: Add an R object to the UI
+: Add an R object to your user interface.
+ => 어디에 아래의 함수를 위치시킬 것인가를 정함. 아래 예시에서는 mainPanel에 위치함.
+
+Output function|Creates
+:---:|:---:
+`dataTableOutput` | DataTable 
+`htmlOutput` | raw HTML 
+`imageOutput` | image 
+`plotOutput` | plot 
+`tableOutput` | table 
+`textOutput` | text 
+`uiOutput` | raw HTML 
+`verbatimTextOutput `| text 
+
+```{r}
+ui <- fluidPage(
+  titlePanel("censusVis"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create demographic maps with 
+               information from the 2010 US Census."),
+      
+      selectInput("var", 
+                  label = "Choose a variable to display",
+                  choices = c("Percent White", 
+                              "Percent Black",
+                              "Percent Hispanic", 
+                              "Percent Asian"),
+                  selected = "Percent White"),
+      
+      sliderInput("range", 
+                  label = "Range of interest:",
+                  min = 0, max = 100, value = c(0, 100))
+    ),
+    
+    mainPanel(
+      textOutput("selected_var") # it means exposure the text output on the main Panel
+    )
+  )
+)
+```
+
+
+## 2) Provide R code to build the object
+: how to build the object.
+=> 위에서 함수를 어디에 위치시킬지 정했다면, 두번째로 어떻게 함수를 구성할 것인가를 다룸. 이때, 이를 구성하는 R_code는 `server`함수 안에 위치해야함!
+때문에 `server` 안에 구성되는 함수는 반드시 위의 함수에서 string으로 지정한 변수명을 사용해야함!
+
+### 1) server function
+ : plays a special role in t.he Shiny process; it builds a list-like object named output that contains all of the code needed to update the R objects in your app. Each R object needs to have its own entry in the list.
+```{r}
+server <- function(input, output) {
+  
+  output$selected_var <- renderText({  # "selected_var": using same variable name with ui 
+    "You have selected this"
+  })
+  
+}
+```
+
+
+### 2) render~
+Each entry to output should contain the output of one of Shiny’s `render*`  functions. These functions capture an R expression and do some light pre-processing on the expression. Use the `render*` function that corrresponds to the type of reactive object you are making.
+
+render function |creates
+:---:|:---:
+`renderDataTable` | DataTable 
+`dataTableOutput` | DataTable 
+`renderImage` | images (saved as a link to a source file) 
+`renderPlot` | plots 
+`renderPrint` | any printed output 
+`renderTable` | data frame, matrix, other table like structures 
+`renderText` | character strings 
+`renderUI` | a Shiny tag object or HTML 
+
+Think of this R expression as a set of instructions that you give Shiny to store for later. Shiny will run the instructions when you first launch your app, and then Shiny will re-run the instructions every time it needs to update your object.
+
+For this to work, your expression should return the object you have in mind (a piece of text, a plot, a data frame, etc.). You will get an error if the expression does not return an object, or if it returns the wrong type of object.
+
+# 2. Use widget values
+: 위의 작업까지 마치면, 패널에 특정 텍스트(혹은 이미지등등) 나타나지만 그뿐 위젯을 조작해도 문자는 바끼지 않는다. 
+때문에 반응형 텍스트를 생성하기 위해서는 text를 구성할때 shiny의 widget value를 호출해주어야 한다.
+
+## 1) call a widet value when it builds the text or something
+### (1) server function 
+: server function의 첫번째 코드를 보면 `input`과 `output` 두가지로 이루어져 있는 것을 확인 할 수 있다. 
+ - `output` : a list-like object that stores instructions for building the R objects in your app.
+ - `input`  : second list-like object. It stores the current values of all of the widgets in your app. These values will be saved under the names that you gave the widgets in your ui.
+ 
+```{r}
+server <- function(input, output) {
+  
+  output$selected_var <- renderText({ 
+    paste("You have selected", input$var)
+  })
+  
+}
+```
+위 예시에서 `output$selecte_var`와 `input$var`를 보면, 어떤 var를 선택하는 지에 따라 selected_var자리에 텍스트가 변경될 것임을 알 수 있다.
+
+
+# 3. Launch your app and see the reactive output
+```{r}
+runApp("census-app", display.mode = "showcase")
+```
+
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("censusVis"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create demographic maps with 
+               information from the 2010 US Census."),
+      
+      selectInput("var", 
+                  label = "Choose a variable to display",
+                  choices = c("Percent White", 
+                              "Percent Black",
+                              "Percent Hispanic", 
+                              "Percent Asian"),
+                  selected = "Percent White"),
+      
+      sliderInput("range", 
+                  label = "Range of interest:",
+                  min = 0, max = 100, value = c(0, 100))
+    ),
+    
+    mainPanel(
+      textOutput(outputId = "selected_var"), # setting the place of "selected_var" 
+      textOutput(outputId = "min_max")  # setting the place of "min_max" 
+    )
+  )
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+  output$selected_var <- renderText({  # output of reactive text
+    paste("You have selected", input$var) # input of reactive text
+  })
+  
+  output$min_max <- renderText({  # output of reactive range 
+    paste("You have chosen a range that goes from",
+          input$range[1], "to", input$range[2])  # input of reactive range
+  })
+  
+}
+ 
+# Run the app ----
+shinyApp(ui, server)
+```
+
+```{r}
+# runApp("census-app", display.mode = "showcase")
+```
+
+
+# 4. Recap
+
+In this lesson, you created your first reactive Shiny app. Along the way, you learned to
+•use an *Output function in the ui to place reactive objects in your Shiny app,
+•use a render* function in the server to tell Shiny how to build your objects,
+•surround R expressions by curly braces, {}, in each render* function,
+•save your render* expressions in the output list, with one entry for each reactive object in your app, and
+•create reactivity by including an input value in a render* expression.
+
+If you follow these rules, Shiny will automatically make your objects reactive.
+
+In Lesson 5 you will create a more sophisticated reactive app that relies on R scripts and external data.
+
+
+
+
+
+
+ 

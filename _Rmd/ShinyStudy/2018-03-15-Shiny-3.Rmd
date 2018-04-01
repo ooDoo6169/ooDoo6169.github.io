@@ -1,0 +1,201 @@
+---
+layout : post
+title: "Shiny_study_3"
+subtitle: "Add control widgets "
+author: "ooDoo"
+date: 2018-03-11
+categories : study
+cover : /assets/article_images/title/instacode_sizedown.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# 1. Control widgets
+: This lesson will show you how to build a user interface for your app. You will learn how to lay out the user interface and then add text, images, and other HTML elements to your Shiny app. 
+
+## 1) The standard Shiny widgets 
+
+함수명|기능
+:---:|:---:
+`actionButton` | Action Button 
+`checkboxGroupInput` | A group of check boxes 
+`checkboxInput` | A single check box 
+`dateInput` | A calendar to aid date selection 
+`dateRangeInput` | A pair of calendars for selecting a date range 
+`fileInput` | A file upload control wizard 
+`helpText` | Help text that can be added to an input form 
+`numericInput` | A field to enter numbers 
+`radioButtons` | A set of radio buttons 
+`selectInput` | A box with choices to select from 
+`sliderInput` | A slider bar 
+`submitButton` | A submit button 
+`textInput` | A field to enter text 
+
+
+# 2. Adding widgets
+
+## 1) arguments
+The first two arguments
+
+•a name for the widget: 결과물에 노출되지는 않지만, 추후 위젯 정보에 접근하는데 사용되며, 반드시 string으로 입력해야됨
+•a label: 결과물에 노출 되는 이름으로, 역시 반드시 string으로 작성해야 하며 공란(" ")으로 남겨두어도 가능하다.     
+```{r}
+# Exampe
+#actionButton("action", # a name for the widget 
+#              "Action") # a label
+```
+
+*위젯 별로 다양한 arguments가 필요하며, 각각의 필요한  arguments는 function's help page를 통해서 알 수 있다.*
+ex.) `?selectInput`
+
+```{r}
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  titlePanel("Basic widgets"),
+  
+  fluidRow(
+    
+    column(3,
+           h3("Buttons"),
+           actionButton("action", # a name for the widget 
+                        "Action"), # a label
+           br(),
+           br(), 
+           submitButton("Submit")),
+    
+    column(3,
+           h3("Single checkbox"),
+           checkboxInput("checkbox", "Choice A", value = TRUE)),
+    
+    column(3, 
+           checkboxGroupInput("checkGroup", 
+                              h3("Checkbox group"), 
+                              choices = list("Choice 1" = 1, 
+                                             "Choice 2" = 2, 
+                                             "Choice 3" = 3), # using list for many select
+                              selected = 1)),
+    
+    column(3, 
+           dateInput("date",  # a name for the widget
+                     h3("Date input"), 
+                     value = "2014-01-01"))   
+  ),
+  
+  fluidRow(
+    
+    column(3,
+           dateRangeInput("dates",
+                          h3("Date range"))),
+    
+    column(3,
+           fileInput("file",
+                     h3("File input"))),
+    
+    column(3, 
+           h3("Help text"),
+           helpText("Note: help text isn't a true widget,", 
+                    "but it provides an easy way to add text to",
+                    "accompany other widgets.")),
+    
+    column(3, 
+           numericInput("num", 
+                        h3("Numeric input"), 
+                        value = 1)) # set the default value   
+  ),
+  
+  fluidRow(
+    
+    column(3,
+           radioButtons("radio", h3("Radio buttons"),
+                        choices = list("Choice 1" = 1, "Choice 2" = 2,
+                                       "Choice 3" = 3),selected = 1)),
+    
+    column(3,
+           selectInput("select", h3("Select box"), 
+                       choices = list("Choice 1" = 1, "Choice 2" = 2,
+                                      "Choice 3" = 3), selected = 1)),
+    
+    column(3, 
+           sliderInput("slider1", h3("Sliders"),
+                       min = 0, max = 100, value = 50),
+           sliderInput("slider2", "",
+                       min = 0, max = 100, value = c(25, 75))
+    ),
+    
+    column(3, 
+           textInput("text", h3("Text input"), 
+                     value = "Enter text..."))   
+  )
+  
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+
+# 3. Practice 
+```{r}
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  titlePanel("censusVis"),
+
+  sidebarPanel(
+      helpText("Creat demographic maps with information from the 2010 US Census."),
+       br(),
+       selectInput(inputId = "select",
+                   label = strong("Choose a variable to display"), 
+                   choices = list("percent White", 
+                                  "Percent Black", 
+                                  "Percent Hispanic",
+                                  "Percent Asian"),
+                                  selected = "Percent White"),
+       br(),
+       sliderInput(inputId = "slider_1",
+                   label = strong("Range of interest"),
+                   min = 0, max = 100,
+                   value =c(30, max)) # value : initial value
+        ) 
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+
+# 4. Shiny Widgets Gallery
+![Shiny Widgets Gallery](http://shiny.rstudio.com/gallery/widget-gallery.html)
+
+# 5. Recap
+It is easy to add fully functional widgets to your Shiny app.
+•Shiny provides a family of functions to create these widgets.
+
+•Each function requires a name and a label.
+
+•Some widgets need specific instructions to do their jobs.
+
+•You add widgets to your Shiny app just like you added other types of HTML content (see Lesson 2)
+
+
+
+
+
+
+
+
+
