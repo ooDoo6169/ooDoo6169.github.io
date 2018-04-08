@@ -1,7 +1,10 @@
 ---
+layout : post
 title: "ggvis_study"
 author: "ooDoo"
-date: "2018년 4월 4일"
+date: 2018-04-04
+categories : kaggle
+cover : /assets/article_images/title/instacode_sizedown.png
 output: html_document
 runtime: shiny
 ---
