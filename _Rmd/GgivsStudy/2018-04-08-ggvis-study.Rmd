@@ -48,12 +48,13 @@ head(mtcars)
 ```{r}
 library(dplyr)
 mtcars %>%
-  mutate(disp = disp / 61.0237) %>% # convert engine displacment to litres
-  ggvis(x = ~mpg, y = ~disp) %>%
-  layer_points() %>%
-  set_options(width = 300, height = 200, 
-              padding = padding(10, 10, 10, 10),
-              renderer = "canvas")
+    mutate(disp = disp / 61.0237) %>% # convert engine displacment to litres
+    ggvis(x = ~mpg, y = ~disp) %>%
+    layer_points() %>%
+    set_options(width = 300, height = 200,
+                padding = padding(10, 10, 10, 10)) -> x
+
+view_dynamic(x, port = NULL, quiet = FALSE)
 ```
 *변수 앞에 "~"를 붙이는 이유*
  : ggvis안에서 사용하려는 변수는 실제 벡터 혙태로 저장 되어있는 변수가 아닌, 해당 데이터셋에서만 존재하는 컬럼이기에 이를 구분해 주기 위해서 반드시 "~"를 앞에 붙여야 한다. 
