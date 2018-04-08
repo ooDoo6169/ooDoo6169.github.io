@@ -16,14 +16,14 @@ rmds <- "_Rmd"
 setwd(base)
 list.files()
 # 파일 이름 지정
-filename <- "2018-02-09-NaturalLanguate-String.Rmd"  # check here!!!!!
+filename <- "ShinyStudy/2018-03-01-Shiny-1.Rmd"  # check here!!!!!
 
 # 폴더 경로들
 figs.path <- "assets/R_study/"
-posts.path <- "_posts/R_study/"
+posts.path <- "_posts/R_Shiny/"
 
 # Rmd -> md 변환
-require(knitr)5
+require(knitr)
 render_jekyll(highlight = "pygments")
 opts_knit$set(base.url="/")
 
