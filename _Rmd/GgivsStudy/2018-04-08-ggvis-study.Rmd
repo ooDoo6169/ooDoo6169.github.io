@@ -1,0 +1,175 @@
+---
+title: "ggvis_study"
+author: "ooDoo"
+date: "2018년 4월 4일"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# basic package
+library(ggplot2)
+library(ggthemr)
+library(dplyr)
+library(data.table)
+library(readr)
+library(ggvis)
+
+# install the latest development version 
+# install.packages("devtools")
+#devtools::install_github("hadley/lazyeval", build_vignettes = FALSE)
+#devtools::install_github("hadley/dplyr", build_vignettes = FALSE)
+#devtools::install_github("rstudio/ggvis", build_vignettes = FALSE)
+
+#setwd
+knitr::opts_knit$set(root.dir = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis")
+```
+
+# 1. Dive into plotting with `ggvis`
+
+## 1) basic Usage
+```{r}
+layer_points(ggvis(mtcars, x = ~wt, y = ~mpg))
+```
+
+```{r}
+head(mtcars)
+```
+
+
+## 2) Using `dplyr`
+```{r}
+library(dplyr)
+mtcars %>%
+  mutate(disp = disp / 61.0237) %>% # convert engine displacment to litres
+  ggvis(x = ~mpg, y = ~disp) %>%
+  layer_points()
+```
+*변수 앞에 "~"를 붙이는 이유*
+ : ggvis안에서 사용하려는 변수는 실제 벡터 혙태로 저장 되어있는 변수가 아닌, 해당 데이터셋에서만 존재하는 컬럼이기에 이를 구분해 주기 위해서 반드시 "~"를 앞에 붙여야 한다. 
+ 
+## 3) Mapping tools
+ - `fill`
+ - `stroke` 
+ - `size`
+ - `shape`
+ 
+### (1) fill 
+```{r}
+# factors
+mtcars %>% 
+    ggvis(~mpg, ~disp, fill = ~as.factor(vs)) %>% 
+    layer_points()
+
+# numeric
+mtcars %>% 
+    ggvis(~mpg, ~disp, fill = ~qsec) %>% 
+    layer_points()
+
+# fixed colour
+mtcars %>% 
+    ggvis(~mpg, ~disp, fill := "skyblue") %>% 
+    layer_points()
+```
+: same as ggplot's usage, but If you want to make the points a fixed colour or size, you need to use `:=` instead of `=`. 
+ 
+### (2) stroke 
+```{r}
+# setting the stroke color using varialbe
+mtcars %>%
+    ggvis(~mpg, ~disp, stroke = ~vs) %>%
+    layer_points()
+
+# setting the stroke color using the fixed colour 
+mtcars %>%
+    ggvis(~mpg, ~disp, stroke := "black") %>%
+    layer_points()
+```
+ 
+### (3) size
+```{r}
+mtcars %>%
+    ggvis(~mpg, ~disp, size = ~vs) %>% 
+    layer_points()
+```
+ 
+
+### (4) shape
+```{r}
+# shape  
+mtcars %>% 
+    ggvis(~mpg, ~disp, shape := "diamond") %>%
+    layer_points() 
+
+# shape differently as variable
+mtcars %>% 
+    ggvis(~mpg, ~disp, shape = ~factor(cyl)) %>%
+    layer_points() 
+
+# shape and color
+mtcars %>% 
+    ggvis(~mpg, ~disp, shape = ~factor(cyl), fill = ~as.factor(cyl)) %>%
+    layer_points() 
+```
+*i don't know how to readjust the legend in ggvis yet*
+
+ 
+### (5) opacity(alpha value in ggplot)
+```{r}
+mtcars %>% 
+    ggvis(~wt, ~mpg, size := 300, opacity := 0.4) %>%
+    layer_points()
+```
+ 
+ 
+#2. Interaction_using mouse
+## (1) input_slider() 
+### (1) control the size and opacity 
+```{r}
+mtcars %>% 
+  ggvis(~wt, ~mpg, 
+    size := input_slider(10, 100),
+    opacity := input_slider(0, 1)) %>% 
+  layer_points()
+```
+
+*the result gonna show on the *Viewer of Rstudio
+if we want pass the next step, we have to quit the result such as shiny-apps
+
+### (2) width and centers of histogram bins
+```{r}
+mtcars %>% 
+    ggvis(~wt) %>% # since histogram only takes list of data type, indexing the value as above using "~""
+    layer_histograms(width = input_slider(0, 4, step = 0.10, label = "width"),
+                     center = input_slider(0, 2, step = 0.05, label = "center"))
+```
+
+
+## (2) input_checkbox
+```{r}
+    
+```
+
+
+
+
+#2. Interaction_using keyboard
+```{r}
+keys_s <- left_right(10, 1000, step = 50)
+mtcars %>%
+    ggvis(~wt, ~mpg, size := keys_s, opacity := 0.5) %>% 
+    layer_points()
+```
+
+
+
+
+
+
+
+
+
+
+
