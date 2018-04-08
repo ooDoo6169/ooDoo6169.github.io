@@ -3,7 +3,7 @@ layout : post
 title: "ggvis_study"
 author: "ooDoo"
 date: 2018-04-04
-categories : kaggle
+categories : ggvis
 cover : /assets/article_images/title/instacode_sizedown.png
 output: html_document
 runtime: shiny
@@ -19,6 +19,14 @@ library(dplyr)
 library(data.table)
 library(readr)
 library(ggvis)
+library(knitr)
+
+
+# Define image sizes
+img.width <- 450
+img.height <- 300
+options(RCHART_HEIGHT = img.height, RCHART_WIDTH = img.width)
+opts_chunk$set(fig.width=6, fig.height=4)
 
 # install the latest development version 
 # install.packages("devtools")
@@ -163,10 +171,13 @@ mtcars %>%
 keys_s <- left_right(10, 1000, step = 50)
 mtcars %>%
     ggvis(~wt, ~mpg, size := keys_s, opacity := 0.5) %>% 
-    layer_points()
+    layer_points() 
 ```
 
 
+```{r}
+#knit2html(input = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis/ggvis_study.Rmd", output = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis") 
+```
 
 
 
