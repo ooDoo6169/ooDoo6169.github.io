@@ -19,27 +19,27 @@ runtime: shiny
 layer_points(ggvis(mtcars, x = ~wt, y = ~mpg))
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id610283417-container" class="ggvis-output-container">
-<div id="plot_id610283417" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id780607246-container" class="ggvis-output-container">
+<div id="plot_id780607246" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id610283417_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id610283417" data-renderer="svg">SVG</a>
+<a id="plot_id780607246_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id780607246" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id610283417_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id610283417" data-renderer="canvas">Canvas</a>
+<a id="plot_id780607246_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id780607246" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id610283417_download" class="ggvis-download" data-plot-id="plot_id610283417">Download</a>
+<a id="plot_id780607246_download" class="ggvis-download" data-plot-id="plot_id780607246">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id610283417_spec = {
+var plot_id780607246_spec = {
   "data": [
     {
       "name": "mtcars0",
@@ -160,7 +160,7 @@ var plot_id610283417_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id610283417").parseSpec(plot_id610283417_spec);
+ggvis.getPlot("plot_id780607246").parseSpec(plot_id780607246_spec);
 </script><!--/html_preserve-->
 
 
@@ -188,20 +188,13 @@ library(dplyr)
 mtcars %>%
     mutate(disp = disp / 61.0237) %>% # convert engine displacment to litres
     ggvis(x = ~mpg, y = ~disp) %>%
-    layer_points() %>%
-    set_options(width = 300, height = 200,
-                padding = padding(10, 10, 10, 10)) -> x
+    layer_points() -> test 
 
-view_dynamic(x, port = NULL, quiet = FALSE)
+q <- knit_print.ggvis(test)
+writeLines(as.character(q), con = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis/2018-04-08-ggvis-study,Rmd")
 {% endhighlight %}
-
-
-
-{% highlight text %}
-## Error in loadNamespace(name): 'webshot'¿Ã∂Û∞Ì ∫“∏Æ¥¬ ∆–≈∞¡ˆ∞° æ¯Ω¿¥œ¥Ÿ
-{% endhighlight %}
-*Î≥Ä<ec>àò <ec>ïû<ec>óê "~"Î•<bc> Î∂ôÏù¥<eb>äî <ec>ù¥<ec>ú†*
- : ggvis<ec>ïà<ec>óê<ec>Ñú <ec>Ç¨<ec>ö©<ed>ïò<eb>†§<eb>äî Î≥Ä<ec>àò<eb>äî <ec>ã§<ec>†ú Î≤°ÌÑ∞ <ed>òô<ed>ÉúÎ°<9c> <ec><a0>Ä<ec>û• <eb>êò<ec>ñ¥<ec>ûà<eb>äî Î≥Ä<ec>àòÍ∞Ä <ec>ïÑ<eb>ãå, <ed>ï¥<eb>ãπ <eb>ç∞<ec>ù¥<ed>Ñ∞<ec>Öã<ec>óê<ec>ÑúÎß<8c> Ï°¥Ïû¨<ed>ïò<eb>äî Ïª¨Îüº<ec>ù¥Í∏∞Ïóê <ec>ù¥Î•<bc> Íµ¨Î∂Ñ<ed>ï¥ Ï£ºÍ∏∞ <ec>úÑ<ed>ï¥<ec>Ñú Î∞òÎìú<ec>ãú "~"Î•<bc> <ec>ïû<ec>óê Î∂ôÏó¨<ec>ïº <ed>ïú<eb>ã§. 
+*Î≥ÄÏàò ÏïûÏóê "~"Î•º Î∂ôÏù¥Îäî Ïù¥Ïú†*
+ : ggvisÏïàÏóêÏÑú ÏÇ¨Ïö©ÌïòÎ†§Îäî Î≥ÄÏàòÎäî Ïã§Ï†ú Î≤°ÌÑ∞ ÌòôÌÉúÎ°ú Ï†ÄÏû• ÎêòÏñ¥ÏûàÎäî Î≥ÄÏàòÍ∞Ä ÏïÑÎãå, Ìï¥Îãπ Îç∞Ïù¥ÌÑ∞ÏÖãÏóêÏÑúÎßå Ï°¥Ïû¨ÌïòÎäî Ïª¨ÎüºÏù¥Í∏∞Ïóê Ïù¥Î•º Íµ¨Î∂ÑÌï¥ Ï£ºÍ∏∞ ÏúÑÌï¥ÏÑú Î∞òÎìúÏãú "~"Î•º ÏïûÏóê Î∂ôÏó¨Ïïº ÌïúÎã§. 
  
 ## 3) Mapping tools
  - `fill`
@@ -218,27 +211,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id345851594-container" class="ggvis-output-container">
-<div id="plot_id345851594" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id822866169-container" class="ggvis-output-container">
+<div id="plot_id822866169" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id345851594_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id345851594" data-renderer="svg">SVG</a>
+<a id="plot_id822866169_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id822866169" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id345851594_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id345851594" data-renderer="canvas">Canvas</a>
+<a id="plot_id822866169_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id822866169" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id345851594_download" class="ggvis-download" data-plot-id="plot_id345851594">Download</a>
+<a id="plot_id822866169_download" class="ggvis-download" data-plot-id="plot_id822866169">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id345851594_spec = {
+var plot_id822866169_spec = {
   "data": [
     {
       "name": ".0",
@@ -385,7 +378,7 @@ var plot_id345851594_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id345851594").parseSpec(plot_id345851594_spec);
+ggvis.getPlot("plot_id822866169").parseSpec(plot_id822866169_spec);
 </script><!--/html_preserve-->
 
 {% highlight r %}
@@ -395,27 +388,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id356258821-container" class="ggvis-output-container">
-<div id="plot_id356258821" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id811652738-container" class="ggvis-output-container">
+<div id="plot_id811652738" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id356258821_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id356258821" data-renderer="svg">SVG</a>
+<a id="plot_id811652738_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id811652738" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id356258821_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id356258821" data-renderer="canvas">Canvas</a>
+<a id="plot_id811652738_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id811652738" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id356258821_download" class="ggvis-download" data-plot-id="plot_id356258821">Download</a>
+<a id="plot_id811652738_download" class="ggvis-download" data-plot-id="plot_id811652738">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id356258821_spec = {
+var plot_id811652738_spec = {
   "data": [
     {
       "name": ".0",
@@ -565,7 +558,7 @@ var plot_id356258821_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id356258821").parseSpec(plot_id356258821_spec);
+ggvis.getPlot("plot_id811652738").parseSpec(plot_id811652738_spec);
 </script><!--/html_preserve-->
 
 {% highlight r %}
@@ -575,27 +568,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id475070119-container" class="ggvis-output-container">
-<div id="plot_id475070119" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id966858534-container" class="ggvis-output-container">
+<div id="plot_id966858534" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id475070119_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id475070119" data-renderer="svg">SVG</a>
+<a id="plot_id966858534_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id966858534" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id475070119_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id475070119" data-renderer="canvas">Canvas</a>
+<a id="plot_id966858534_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id966858534" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id475070119_download" class="ggvis-download" data-plot-id="plot_id475070119">Download</a>
+<a id="plot_id966858534_download" class="ggvis-download" data-plot-id="plot_id966858534">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id475070119_spec = {
+var plot_id966858534_spec = {
   "data": [
     {
       "name": ".0",
@@ -716,7 +709,7 @@ var plot_id475070119_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id475070119").parseSpec(plot_id475070119_spec);
+ggvis.getPlot("plot_id966858534").parseSpec(plot_id966858534_spec);
 </script><!--/html_preserve-->
 : same as ggplot's usage, but If you want to make the points a fixed colour or size, you need to use `:=` instead of `=`. 
  
@@ -729,27 +722,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id576307568-container" class="ggvis-output-container">
-<div id="plot_id576307568" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id398731911-container" class="ggvis-output-container">
+<div id="plot_id398731911" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id576307568_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id576307568" data-renderer="svg">SVG</a>
+<a id="plot_id398731911_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id398731911" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id576307568_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id576307568" data-renderer="canvas">Canvas</a>
+<a id="plot_id398731911_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id398731911" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id576307568_download" class="ggvis-download" data-plot-id="plot_id576307568">Download</a>
+<a id="plot_id398731911_download" class="ggvis-download" data-plot-id="plot_id398731911">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id576307568_spec = {
+var plot_id398731911_spec = {
   "data": [
     {
       "name": ".0",
@@ -902,7 +895,7 @@ var plot_id576307568_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id576307568").parseSpec(plot_id576307568_spec);
+ggvis.getPlot("plot_id398731911").parseSpec(plot_id398731911_spec);
 </script><!--/html_preserve-->
 
 {% highlight r %}
@@ -912,27 +905,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id628905275-container" class="ggvis-output-container">
-<div id="plot_id628905275" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id920899068-container" class="ggvis-output-container">
+<div id="plot_id920899068" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id628905275_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id628905275" data-renderer="svg">SVG</a>
+<a id="plot_id920899068_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id920899068" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id628905275_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id628905275" data-renderer="canvas">Canvas</a>
+<a id="plot_id920899068_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id920899068" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id628905275_download" class="ggvis-download" data-plot-id="plot_id628905275">Download</a>
+<a id="plot_id920899068_download" class="ggvis-download" data-plot-id="plot_id920899068">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id628905275_spec = {
+var plot_id920899068_spec = {
   "data": [
     {
       "name": ".0",
@@ -1056,7 +1049,7 @@ var plot_id628905275_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id628905275").parseSpec(plot_id628905275_spec);
+ggvis.getPlot("plot_id920899068").parseSpec(plot_id920899068_spec);
 </script><!--/html_preserve-->
  
 ### (3) size
@@ -1067,27 +1060,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id295314560-container" class="ggvis-output-container">
-<div id="plot_id295314560" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id548448116-container" class="ggvis-output-container">
+<div id="plot_id548448116" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id295314560_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id295314560" data-renderer="svg">SVG</a>
+<a id="plot_id548448116_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id548448116" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id295314560_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id295314560" data-renderer="canvas">Canvas</a>
+<a id="plot_id548448116_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id548448116" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id295314560_download" class="ggvis-download" data-plot-id="plot_id295314560">Download</a>
+<a id="plot_id548448116_download" class="ggvis-download" data-plot-id="plot_id548448116">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id295314560_spec = {
+var plot_id548448116_spec = {
   "data": [
     {
       "name": ".0",
@@ -1237,7 +1230,7 @@ var plot_id295314560_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id295314560").parseSpec(plot_id295314560_spec);
+ggvis.getPlot("plot_id548448116").parseSpec(plot_id548448116_spec);
 </script><!--/html_preserve-->
  
 
@@ -1250,27 +1243,27 @@ mtcars %>%
     layer_points() 
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id495336603-container" class="ggvis-output-container">
-<div id="plot_id495336603" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id696730375-container" class="ggvis-output-container">
+<div id="plot_id696730375" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id495336603_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id495336603" data-renderer="svg">SVG</a>
+<a id="plot_id696730375_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id696730375" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id495336603_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id495336603" data-renderer="canvas">Canvas</a>
+<a id="plot_id696730375_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id696730375" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id495336603_download" class="ggvis-download" data-plot-id="plot_id495336603">Download</a>
+<a id="plot_id696730375_download" class="ggvis-download" data-plot-id="plot_id696730375">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id495336603_spec = {
+var plot_id696730375_spec = {
   "data": [
     {
       "name": ".0",
@@ -1394,7 +1387,7 @@ var plot_id495336603_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id495336603").parseSpec(plot_id495336603_spec);
+ggvis.getPlot("plot_id696730375").parseSpec(plot_id696730375_spec);
 </script><!--/html_preserve-->
 
 {% highlight r %}
@@ -1404,27 +1397,27 @@ mtcars %>%
     layer_points() 
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id569902474-container" class="ggvis-output-container">
-<div id="plot_id569902474" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id491192244-container" class="ggvis-output-container">
+<div id="plot_id491192244" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id569902474_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id569902474" data-renderer="svg">SVG</a>
+<a id="plot_id491192244_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id491192244" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id569902474_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id569902474" data-renderer="canvas">Canvas</a>
+<a id="plot_id491192244_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id491192244" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id569902474_download" class="ggvis-download" data-plot-id="plot_id569902474">Download</a>
+<a id="plot_id491192244_download" class="ggvis-download" data-plot-id="plot_id491192244">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id569902474_spec = {
+var plot_id491192244_spec = {
   "data": [
     {
       "name": ".0",
@@ -1574,7 +1567,7 @@ var plot_id569902474_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id569902474").parseSpec(plot_id569902474_spec);
+ggvis.getPlot("plot_id491192244").parseSpec(plot_id491192244_spec);
 </script><!--/html_preserve-->
 
 {% highlight r %}
@@ -1584,27 +1577,27 @@ mtcars %>%
     layer_points() 
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id122974200-container" class="ggvis-output-container">
-<div id="plot_id122974200" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id677291977-container" class="ggvis-output-container">
+<div id="plot_id677291977" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id122974200_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id122974200" data-renderer="svg">SVG</a>
+<a id="plot_id677291977_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id677291977" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id122974200_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id122974200" data-renderer="canvas">Canvas</a>
+<a id="plot_id677291977_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id677291977" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id122974200_download" class="ggvis-download" data-plot-id="plot_id122974200">Download</a>
+<a id="plot_id677291977_download" class="ggvis-download" data-plot-id="plot_id677291977">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id122974200_spec = {
+var plot_id677291977_spec = {
   "data": [
     {
       "name": ".0",
@@ -1779,7 +1772,7 @@ var plot_id122974200_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id122974200").parseSpec(plot_id122974200_spec);
+ggvis.getPlot("plot_id677291977").parseSpec(plot_id677291977_spec);
 </script><!--/html_preserve-->
 *i don't know how to readjust the legend in ggvis yet*
 
@@ -1792,27 +1785,27 @@ mtcars %>%
     layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id551578455-container" class="ggvis-output-container">
-<div id="plot_id551578455" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id352994701-container" class="ggvis-output-container">
+<div id="plot_id352994701" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id551578455_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id551578455" data-renderer="svg">SVG</a>
+<a id="plot_id352994701_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id352994701" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id551578455_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id551578455" data-renderer="canvas">Canvas</a>
+<a id="plot_id352994701_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id352994701" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id551578455_download" class="ggvis-download" data-plot-id="plot_id551578455">Download</a>
+<a id="plot_id352994701_download" class="ggvis-download" data-plot-id="plot_id352994701">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id551578455_spec = {
+var plot_id352994701_spec = {
   "data": [
     {
       "name": ".0",
@@ -1936,7 +1929,7 @@ var plot_id551578455_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id551578455").parseSpec(plot_id551578455_spec);
+ggvis.getPlot("plot_id352994701").parseSpec(plot_id352994701_spec);
 </script><!--/html_preserve-->
  
  
@@ -1952,40 +1945,40 @@ mtcars %>%
   layer_points()
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id530935135-container" class="ggvis-output-container">
-<div id="plot_id530935135" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id420375260-container" class="ggvis-output-container">
+<div id="plot_id420375260" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id530935135_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id530935135" data-renderer="svg">SVG</a>
+<a id="plot_id420375260_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id420375260" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id530935135_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id530935135" data-renderer="canvas">Canvas</a>
+<a id="plot_id420375260_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id420375260" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id530935135_download" class="ggvis-download" data-plot-id="plot_id530935135">Download</a>
+<a id="plot_id420375260_download" class="ggvis-download" data-plot-id="plot_id420375260">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id530935135_spec = {
+var plot_id420375260_spec = {
   "data": [
     {
       "name": ".0",
       "format": {
         "type": "csv",
         "parse": {
-          "reactive_807864303": "number",
-          "reactive_569176993": "number",
+          "reactive_436260110": "number",
+          "reactive_944092191": "number",
           "wt": "number",
           "mpg": "number"
         }
       },
-      "values": "\"reactive_807864303\",\"reactive_569176993\",\"wt\",\"mpg\"\n55,0.5,2.62,21\n55,0.5,2.875,21\n55,0.5,2.32,22.8\n55,0.5,3.215,21.4\n55,0.5,3.44,18.7\n55,0.5,3.46,18.1\n55,0.5,3.57,14.3\n55,0.5,3.19,24.4\n55,0.5,3.15,22.8\n55,0.5,3.44,19.2\n55,0.5,3.44,17.8\n55,0.5,4.07,16.4\n55,0.5,3.73,17.3\n55,0.5,3.78,15.2\n55,0.5,5.25,10.4\n55,0.5,5.424,10.4\n55,0.5,5.345,14.7\n55,0.5,2.2,32.4\n55,0.5,1.615,30.4\n55,0.5,1.835,33.9\n55,0.5,2.465,21.5\n55,0.5,3.52,15.5\n55,0.5,3.435,15.2\n55,0.5,3.84,13.3\n55,0.5,3.845,19.2\n55,0.5,1.935,27.3\n55,0.5,2.14,26\n55,0.5,1.513,30.4\n55,0.5,3.17,15.8\n55,0.5,2.77,19.7\n55,0.5,3.57,15\n55,0.5,2.78,21.4"
+      "values": "\"reactive_436260110\",\"reactive_944092191\",\"wt\",\"mpg\"\n55,0.5,2.62,21\n55,0.5,2.875,21\n55,0.5,2.32,22.8\n55,0.5,3.215,21.4\n55,0.5,3.44,18.7\n55,0.5,3.46,18.1\n55,0.5,3.57,14.3\n55,0.5,3.19,24.4\n55,0.5,3.15,22.8\n55,0.5,3.44,19.2\n55,0.5,3.44,17.8\n55,0.5,4.07,16.4\n55,0.5,3.73,17.3\n55,0.5,3.78,15.2\n55,0.5,5.25,10.4\n55,0.5,5.424,10.4\n55,0.5,5.345,14.7\n55,0.5,2.2,32.4\n55,0.5,1.615,30.4\n55,0.5,1.835,33.9\n55,0.5,2.465,21.5\n55,0.5,3.52,15.5\n55,0.5,3.435,15.2\n55,0.5,3.84,13.3\n55,0.5,3.845,19.2\n55,0.5,1.935,27.3\n55,0.5,2.14,26\n55,0.5,1.513,30.4\n55,0.5,3.17,15.8\n55,0.5,2.77,19.7\n55,0.5,3.57,15\n55,0.5,2.78,21.4"
     },
     {
       "name": "scale/x",
@@ -2041,10 +2034,10 @@ var plot_id530935135_spec = {
             "value": "#000000"
           },
           "size": {
-            "field": "data.reactive_807864303"
+            "field": "data.reactive_436260110"
           },
           "opacity": {
-            "field": "data.reactive_569176993"
+            "field": "data.reactive_944092191"
           },
           "x": {
             "scale": "x",
@@ -2098,7 +2091,7 @@ var plot_id530935135_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id530935135").parseSpec(plot_id530935135_spec);
+ggvis.getPlot("plot_id420375260").parseSpec(plot_id420375260_spec);
 </script><!--/html_preserve-->
 
 *the result gonna show on the *Viewer of Rstudio
@@ -2113,27 +2106,27 @@ mtcars %>%
                      center = input_slider(0, 2, step = 0.05, label = "center"))
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id922233389-container" class="ggvis-output-container">
-<div id="plot_id922233389" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id502171634-container" class="ggvis-output-container">
+<div id="plot_id502171634" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id922233389_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id922233389" data-renderer="svg">SVG</a>
+<a id="plot_id502171634_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id502171634" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id922233389_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id922233389" data-renderer="canvas">Canvas</a>
+<a id="plot_id502171634_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id502171634" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id922233389_download" class="ggvis-download" data-plot-id="plot_id922233389">Download</a>
+<a id="plot_id502171634_download" class="ggvis-download" data-plot-id="plot_id502171634">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id922233389_spec = {
+var plot_id502171634_spec = {
   "data": [
     {
       "name": ".0/bin1/stack2",
@@ -2264,7 +2257,7 @@ var plot_id922233389_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id922233389").parseSpec(plot_id922233389_spec);
+ggvis.getPlot("plot_id502171634").parseSpec(plot_id502171634_spec);
 </script><!--/html_preserve-->
 
 
@@ -2283,39 +2276,39 @@ mtcars %>%
     layer_points() 
 {% endhighlight %}
 
-<!--html_preserve--><div id="plot_id802574758-container" class="ggvis-output-container">
-<div id="plot_id802574758" class="ggvis-output"></div>
+<!--html_preserve--><div id="plot_id917558312-container" class="ggvis-output-container">
+<div id="plot_id917558312" class="ggvis-output"></div>
 <div class="plot-gear-icon">
 <nav class="ggvis-control">
 <a class="ggvis-dropdown-toggle" title="Controls" onclick="return false;"></a>
 <ul class="ggvis-dropdown">
 <li>
 Renderer: 
-<a id="plot_id802574758_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id802574758" data-renderer="svg">SVG</a>
+<a id="plot_id917558312_renderer_svg" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id917558312" data-renderer="svg">SVG</a>
  | 
-<a id="plot_id802574758_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id802574758" data-renderer="canvas">Canvas</a>
+<a id="plot_id917558312_renderer_canvas" class="ggvis-renderer-button" onclick="return false;" data-plot-id="plot_id917558312" data-renderer="canvas">Canvas</a>
 </li>
 <li>
-<a id="plot_id802574758_download" class="ggvis-download" data-plot-id="plot_id802574758">Download</a>
+<a id="plot_id917558312_download" class="ggvis-download" data-plot-id="plot_id917558312">Download</a>
 </li>
 </ul>
 </nav>
 </div>
 </div>
 <script type="text/javascript">
-var plot_id802574758_spec = {
+var plot_id917558312_spec = {
   "data": [
     {
       "name": ".0",
       "format": {
         "type": "csv",
         "parse": {
-          "reactive_734940579": "number",
+          "reactive_243781136": "number",
           "wt": "number",
           "mpg": "number"
         }
       },
-      "values": "\"reactive_734940579\",\"wt\",\"mpg\"\n505,2.62,21\n505,2.875,21\n505,2.32,22.8\n505,3.215,21.4\n505,3.44,18.7\n505,3.46,18.1\n505,3.57,14.3\n505,3.19,24.4\n505,3.15,22.8\n505,3.44,19.2\n505,3.44,17.8\n505,4.07,16.4\n505,3.73,17.3\n505,3.78,15.2\n505,5.25,10.4\n505,5.424,10.4\n505,5.345,14.7\n505,2.2,32.4\n505,1.615,30.4\n505,1.835,33.9\n505,2.465,21.5\n505,3.52,15.5\n505,3.435,15.2\n505,3.84,13.3\n505,3.845,19.2\n505,1.935,27.3\n505,2.14,26\n505,1.513,30.4\n505,3.17,15.8\n505,2.77,19.7\n505,3.57,15\n505,2.78,21.4"
+      "values": "\"reactive_243781136\",\"wt\",\"mpg\"\n505,2.62,21\n505,2.875,21\n505,2.32,22.8\n505,3.215,21.4\n505,3.44,18.7\n505,3.46,18.1\n505,3.57,14.3\n505,3.19,24.4\n505,3.15,22.8\n505,3.44,19.2\n505,3.44,17.8\n505,4.07,16.4\n505,3.73,17.3\n505,3.78,15.2\n505,5.25,10.4\n505,5.424,10.4\n505,5.345,14.7\n505,2.2,32.4\n505,1.615,30.4\n505,1.835,33.9\n505,2.465,21.5\n505,3.52,15.5\n505,3.435,15.2\n505,3.84,13.3\n505,3.845,19.2\n505,1.935,27.3\n505,2.14,26\n505,1.513,30.4\n505,3.17,15.8\n505,2.77,19.7\n505,3.57,15\n505,2.78,21.4"
     },
     {
       "name": "scale/x",
@@ -2371,7 +2364,7 @@ var plot_id802574758_spec = {
             "value": "#000000"
           },
           "size": {
-            "field": "data.reactive_734940579"
+            "field": "data.reactive_243781136"
           },
           "opacity": {
             "value": 0.5
@@ -2428,7 +2421,7 @@ var plot_id802574758_spec = {
   },
   "handlers": null
 };
-ggvis.getPlot("plot_id802574758").parseSpec(plot_id802574758_spec);
+ggvis.getPlot("plot_id917558312").parseSpec(plot_id917558312_spec);
 </script><!--/html_preserve-->
 
 
