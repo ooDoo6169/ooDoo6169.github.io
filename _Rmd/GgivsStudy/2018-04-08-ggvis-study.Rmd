@@ -22,12 +22,6 @@ library(ggvis)
 library(knitr)
 
 
-# Define image sizes
-img.width <- 450
-img.height <- 300
-options(RCHART_HEIGHT = img.height, RCHART_WIDTH = img.width)
-opts_chunk$set(fig.width=6, fig.height=4)
-
 # install the latest development version 
 # install.packages("devtools")
 #devtools::install_github("hadley/lazyeval", build_vignettes = FALSE)
