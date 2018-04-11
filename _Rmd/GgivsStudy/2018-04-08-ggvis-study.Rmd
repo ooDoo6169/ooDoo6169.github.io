@@ -6,7 +6,6 @@ date: 2018-04-04
 categories : ggvis
 cover : /assets/article_images/title/instacode_sizedown.png
 output: html_document
-runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -50,10 +49,7 @@ library(dplyr)
 mtcars %>%
     mutate(disp = disp / 61.0237) %>% # convert engine displacment to litres
     ggvis(x = ~mpg, y = ~disp) %>%
-    layer_points() -> test 
-
-q <- knit_print.ggvis(test)
-writeLines(as.character(q), con = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis/2018-04-08-ggvis-study,Rmd")
+    layer_points() 
 ```
 *변수 앞에 "~"를 붙이는 이유*
  : ggvis안에서 사용하려는 변수는 실제 벡터 혙태로 저장 되어있는 변수가 아닌, 해당 데이터셋에서만 존재하는 컬럼이기에 이를 구분해 주기 위해서 반드시 "~"를 앞에 붙여야 한다. 
@@ -155,15 +151,19 @@ mtcars %>%
 ```
 
 
-## (2) input_checkbox
+## 2) input_checkbox
 ```{r}
+mtcars %>% 
+    ggvis(~wt) %>% 
+    layer_histograms(width = input_slider(0, 4, step = 0.10, label = "width"),
+                     center = input_slider(0, 2, step = 0.05, label = "center"))
     
 ```
 
 
 
 
-#2. Interaction_using keyboard
+## 3) Interaction_using keyboard 
 ```{r}
 keys_s <- left_right(10, 1000, step = 50)
 mtcars %>%
@@ -171,15 +171,192 @@ mtcars %>%
     layer_points() 
 ```
 
+## 4) etc : Tooltip
+```{r}
+mtcars %>%
+    ggvis(x = ~wt, y = ~mpg) %>%
+    layer_points() %>%
+    add_tooltip(function(df) df$wt)
+```
+※tooltip : 포인트에 커서를 대면, 해당 포인트의 특정 값을 보여주는 기능
+
+
+# 3. Layers
+ : layers can be roughly categorised into two types.
+- simple layer : primitives like points, line and rectangles
+- Compound layer : combine data transformations with one or more simple layers
+
+## 1) Simple Layer 
+### (1) Point Layer : `layer_point()`
+*option* : `x`,`y`, `shape`, `stroke`, `fill`, `strokeOpacity`, `fillOpacity`, `Opacity`
+```{r}
+mtcars %>%
+    ggvis(x = ~wt, y = ~mpg) %>%
+    layer_points(shape := "diamond", fill := "royalblue", opacity := 0.5)
+```
+
+### (2) Patys and Polygons : `layer_paths()`
+```{r}
+df <- data.frame(x = 1:10, y = round(runif(10),2))
+df %>%
+    ggvis(~x, ~y) %>%
+    layer_paths(stroke := "pink")
+```
+
+*if you supply a* `fill`, *you'll get a polygon*
+```{r}
+df <- data.frame(x = 1:10, y = round(runif(10),2))
+df %>%
+    ggvis(~x, ~y) %>%
+    layer_paths(stroke := "pink", fill := "skyblue")
+```
 
 ```{r}
-#knit2html(input = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis/ggvis_study.Rmd", output = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis") 
+t <- seq(0, 2 * pi, length = 100)
+df <- data.frame(x = sin(t), y = cos(t))
+df %>%
+    ggvis(~x, ~y) %>%
+    layer_points() %>%
+    layer_paths(fill := "blueviolet" , opacity := 0.5)
+```
+
+### (3) Filled area : `layer_ribbons()`
+: use properties `y` and `y2` to control the extent of the area.
+#### (a) fill the line up
+```{r}
+df <- data.frame(x = 1:10, y = runif(10))
+df %>%
+    ggvis(~x, ~y) %>%
+    layer_paths(stroke := "red") %>%
+    layer_ribbons(fill := "deepskyblue", opacity := 0.5)
+```
+
+#### (b) fill a limited area : using `y2`
+```{r}
+df %>%
+    ggvis(x = ~x,
+          y = ~y +0.1,
+          y2 = ~y -0.1)%>%
+    layer_ribbons(fill := "deepskyblue", opacity := 0.5)
+```
+
+### (4) Rectangles
+```{r}
+set.seed(1014)
+df <- data.frame(x1 = runif(5),  x2 =runif(5), y1 = runif(5), y2 = runif(5))
+df %>%
+    ggvis(~x1, ~y1, x2 = ~x2, y2 = ~y2, fillOpacity := 0.1) %>%
+    layer_rects()
+```
+※ difference btwn `fillOpacity`and `opacity`
+- `fillOpacity` : make opacity only inside without stroke
+- `opacity` : make opacity everything
+
+### (5) text : layer_text()
+- `text` : text (the label), 
+- `dx` and `dy` : margin in pixels between text and anchor point
+- `angle` : rotate the text
+- `font` : font name
+- `fontSize` : size in pixels
+- `fontWeight`: e.g. bold or normal
+- `fontStyle` : e.g. italic or normal
+```{r}
+df <- data.frame(x = 3:1, y = c(1, 3, 2), # point
+                 label = c("a", "b", "c")) # text
+df
+df %>% 
+    ggvis(x = ~x, y =~y, # point
+          text := ~label) %>% # text
+    layer_text(fontSize = ~x,
+               angle := 90,
+               fontWeight := "bold")
+```
+
+
+## 2) Compound Layer
+### (1) Layer_lines()
+ : automatically orders by the x variable
+
+```{r}
+t <- seq(0, 2 * pi, length = 20)
+df <- data.frame(x = sin(t), y = cos(t))
+
+# previous way using layer_paths
+df %>%
+    ggvis(~x, ~y) %>%
+    layer_paths() 
+
+# new way using layer_lines()
+df %>%
+    ggvis(~x, ~y) %>%
+    layer_lines()
+
+# arrnage + layer_paths
+df %>%
+    ggvis(~x, ~y) %>%
+    arrange(x) %>%
+    layer_paths()
+df %>%
+    ggvis(~x, ~y) %>%
+    arrange(y) %>%
+    layer_paths()
+```
+check out the difference btwn paths and lines
+ => `layer_lines()` is equivalent to `arrange()` + `layer_paths()`
+ 
+### (2) layer_histograms() & layer_freqpolys()
+Both layers first bin the data with `compute_bin()` then display the results with either rects or lines.
+```{r}
+# layer_histograms()
+mtcars %>%
+    ggvis(~mpg) %>%
+    layer_histograms()
+
+# layer_freqpolys()
+mtcars %>%
+    ggvis(~mpg) %>%
+    layer_freqpolys()
+```
+
+### (3) layer_smooths() 
+: fits a smooth model to the data and displays predictions with a line. it's used to highhlight the trend in noisy data
+```{r}
+mtcars %>%
+    ggvis(~wt, ~mpg) %>%
+    layer_points(fill := "deeppink", opacity := 0.5) %>%
+    layer_smooths(opacity := 0.5)
+
+# control the degree of wiggliness with the span parameter
+span <- input_slider(0.2, 1, value = 0.75)
+mtcars %>%
+    ggvis(~wt, ~mpg) %>%
+    layer_points(fill := "deeppink", opacity := 0.5) %>%
+    layer_smooths(span = span)
+```
+
+
+#4. Multiple layers
+```{r}
+mtcars %>% 
+  ggvis(~wt, ~mpg) %>% 
+  layer_smooths() %>% 
+  layer_points()
+
+mtcars %>% ggvis(~wt, ~mpg) %>%
+    layer_points(fill := "black", opacity := 0.5) %>%
+    layer_smooths(span = 1, stroke := "deepskyblue") %>%
+    layer_smooths(span = 0.3, stroke := "deeppink")
 ```
 
 
 
 
 
+
+
+
+
+ 
 
 
 

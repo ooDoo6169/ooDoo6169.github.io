@@ -16,11 +16,11 @@ rmds <- "_Rmd"
 setwd(base)
 list.files()
 # 파일 이름 지정
-filename <- "ShinyStudy/2018-03-01-Shiny-1.Rmd"  # check here!!!!!
+filename <- "GgivsStudy/2018-04-08-ggvis-study.Rmd"  # check here!!!!!
 
 # 폴더 경로들
 figs.path <- "assets/R_study/"
-posts.path <- "_posts/R_Shiny/"
+posts.path <- "_posts/R_ggivs/"
 
 # Rmd -> md 변환
 require(knitr)
