@@ -344,8 +344,8 @@ mtcars %>%
 
 mtcars %>% ggvis(~wt, ~mpg) %>%
     layer_points(fill := "black", opacity := 0.5) %>%
-    layer_smooths(span = 1, stroke := "deepskyblue") %>%
-    layer_smooths(span = 0.3, stroke := "deeppink")
+    layer_smooths(span = 1, stroke := "deepskyblue") %>% # underfitting
+    layer_smooths(span = 0.3, stroke := "deeppink")      # overfitting
 ```
 
 
