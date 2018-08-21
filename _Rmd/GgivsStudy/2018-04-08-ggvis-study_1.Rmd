@@ -1,6 +1,6 @@
 ---
 layout : post
-title: "ggvis_study"
+title: "ggvis_study_1_[basic]"
 author: "ooDoo"
 date: 2018-04-04
 categories : ggvis
@@ -91,6 +91,7 @@ mtcars %>%
     ggvis(~mpg, ~disp, stroke := "black") %>%
     layer_points()
 ```
+ 
  
 ### (3) size
 ```{r}
@@ -348,7 +349,23 @@ mtcars %>% ggvis(~wt, ~mpg) %>%
     layer_smooths(span = 0.3, stroke := "deeppink")      # overfitting
 ```
 
+```{r}
+# With groups
+PlantGrowth %>% 
+    ggvis(~weight, fill = ~group) %>% 
+    group_by(group) %>%
+    layer_densities()
 
+PlantGrowth %>%
+    ggvis(~weight, stroke = ~group) %>%
+    group_by(group) %>%
+    layer_densities(strokeWidth := 3, area = FALSE)
+
+mtcars %>%
+    ggvis(x = ~wt, fill = ~as.factor(gear)) %>%
+    group_by(gear) %>%
+    layer_densities(strokeWidth := 3)
+```
 
 
 

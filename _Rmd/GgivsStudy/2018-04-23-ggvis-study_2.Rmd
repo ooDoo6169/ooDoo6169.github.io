@@ -1,0 +1,159 @@
+---
+layout : post
+title: "ggvis_study_2_[interactive]"
+author: "ooDoo"
+date: 2018-04-23
+categories : ggvis
+cover : /assets/article_images/title/instacode_sizedown.png
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# basic package
+library(ggplot2)
+library(ggthemr)
+library(dplyr)
+library(data.table)
+library(readr)
+library(ggvis)
+library(knitr)
+
+
+#setwd
+knitr::opts_knit$set(root.dir = "C:/Users/TaeHwan/Desktop/0. R/12. ggvis")
+```
+
+# 1. Basic interactive controls
+: 단순한 상수 값들을 변경 시키는 함수들
+*모든 interactive function은 *`input_`*으로 시작한다*
+Output function|Creates
+:---:|:---:
+•`input_slider()` | a slider (or a double-ended range slider)
+•`input_checkbox()` | a check-box
+•`input_checkboxgroup()` | a group of check boxes
+•`input_numeric()`: a spin box
+•`input_radiobuttons()` | pick one from a set options
+•`input_select()` | create a drop-down text box
+•`input_text()` | arbitrary text input
+
+## 1) Make Basic sampel
+ - step_1 : choose appropriate function 
+ - step_2 : check the "inner option" fuction 
+ - step_3 : make interactive condition using `input_` usage
+ - step_4 : fill the neccasary condition at each interactive function
+ 
+```{r}
+mtcars %>%
+  ggvis(~wt, ~mpg) %>%
+  layer_smooths(span = input_slider(0.5, 1, value = 1)) %>%
+  layer_points(size := input_slider(100, 1000, value = 100))
+```
+
+```{r}
+# using 2 controls
+mtcars %>% 
+    ggvis(x = ~wt) %>%
+    layer_densities(             # step_1 : choose appropriate function 
+        adjust = input_slider(   # step_2 : check the "inner option" fuction // # step_3 : make interactive condition using `input_` usage
+           min =  .1,            # step_4 : fill the neccasary condition at each interactive function
+           max =  2,
+           value = 1,
+           step = .1, 
+           label = "Bandwidth adjustment"),     
+        kernel = input_select(
+            c("Gaussian" = "gaussian",
+              "Epanechnikov" = "epanechnikov",
+              "Rectangular" = "rectangular",
+              "Triangular" = "triangular",
+              "Biweight" = "biweight",
+              "Cosine" = "cosine",
+              "Optcosine" = "optcosine"),
+            label = "Kernel")
+        )
+```
+
+
+
+# 2. Arguments 
+ : 모든 `input_` 함수는 조금씩 그 타입은 다르지만, 공통적으로 세가지 arguments를 공유하고 있다. 
+ - `label` : an infomative text label displayed next to the control 
+ - `id` : a unique identifier for the control (this is randomly assigned and you should only need to override in execption circumstances)
+ - `map` : a function that enables you to remap the output of the input to something appropriate for your graphic
+  
+```{r}
+input_slider(min = -5, max = 5,
+             label = "lambda",  # just informative text label
+             map = function(x) 10 ^ x) # using `map', translate the natural number to 10^x 
+```
+
+`map` 을 활용하여, 표면적으로 입력되는 값을 내부적으로 변환하여 도표상의 유의미한 값으로 변형가능하다. 예를 들어 많은 통계 모델의 매개 변수가 로그 눈금에 가장 잘 표현됩니다. 슬라이더와 함께 맵을 사용하면 단일 슬라이더에서 여러 단계로 쉽게 액세스 할 수 있습니다.
+
+
+# 3. Multiple OutPuts
+: Interactive input 
+
+## 1) Use the regular Property inheritance
+: 일반 ggvis함수 안의 속성을 활용
+```{r}
+mtcars %>%
+  ggvis(~wt, ~mpg, size := input_slider(10, 1000)) %>%
+  layer_points(fill := "red") %>%
+  layer_points(stroke := "black", fill := NA)
+```
+
+
+## 2) Create the input and assign it to a variable
+: input목적의 객체를 생성하여 해당 객체에 변수 부여 방식 
+```{r}
+slider <- input_slider(10, 1000) 
+mtcars %>%
+    ggvis(~wt, ~mpg) %>%
+    layer_points(fill := "red", size := slider) %>%
+    layer_points(stroke := "black", fill := NA, size := slider)
+```
+
+## 3) compare the way
+```{r}
+slider <- input_slider(10, 1000)
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points(size := slider) %>%  # without `fill` option, size means the stroke size
+  layer_points(fill := "red", opacity := 0.5, size := slider)
+# one slider is created and used for both layers
+# it controls the size of both the red and the black points. 
+```
+
+```{r}
+slider_1 <- input_slider(10, 1000)
+slider_2 <- input_slider(10, 1000)
+mtcars %>% ggvis(~wt, ~mpg) %>%
+  layer_points(size := slider_1) %>% 
+  layer_points(fill := "red", opacity := 0.5, size := slider_2)
+```
+
+```{r}
+mtcars %>%
+    ggvis(~wt, ~mpg) %>%
+    layer_points(size := input_slider(100, 1000, label = "black")) %>%
+    layer_points(fill := "red", size := input_slider(100, 1000, label = "red"))
+# you get two independent sliders 
+# which allow you to control the size of the red and black points independently.
+```
+:2개 이상의 input값을 주고 싶을 경우, 위와 같이 함수 내부에 각각의 input값을 주거나, 각각의 개별 input용 객체를 주어 이를 구별해주어야 한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
